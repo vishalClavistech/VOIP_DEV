@@ -77,22 +77,9 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
 
   return (
     <div className="min-h-screen bg-figma-grayLight">
-      {/* Header - Top Strip */}
-      <header className="bg-gradient-to-r from-figma-blue to-figma-green text-figma-white">
-        <div className="mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold">VoIP</div>
-          <div className="flex items-center gap-2">
-              <span className="text-sm">Roman Electric, Plumbing, Heating & Cooling</span>
-              <ChevronDownIcon className="h-4 w-4" />
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Tab Navigation */}
       <div className="bg-figma-white border-b border-gray-200">
-        <div className="mx-auto max-w-7xl px-6">
+        <div className="mx-auto px-6">
           <nav className="flex items-center gap-1">
             <button 
               onClick={() => setActiveTab('dashboard')}

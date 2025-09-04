@@ -30,7 +30,7 @@ export default function SettingsPage() {
     <main className="min-h-screen bg-figma-grayLight">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="mx-auto max-w-7xl px-6 py-4">
+        <div className="mx-auto  px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
@@ -53,7 +53,7 @@ export default function SettingsPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto px-6 py-8">
         {/* Debug: Test if content is visible */}
         <div className="mb-4 p-4 bg-red-100 border border-red-300 rounded">
           <p className="text-red-800">Settings page is loading - if you can see this, the component is working</p>

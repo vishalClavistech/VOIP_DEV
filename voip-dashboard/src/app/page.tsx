@@ -1,14 +1,28 @@
+"use client"
+
 import Link from 'next/link'
-import { PhoneIcon, Cog6ToothIcon } from '@heroicons/react/24/outline'
+import { PhoneIcon, Cog6ToothIcon, Bars3Icon } from '@heroicons/react/24/outline'
+import { useSidebar } from '@/contexts/SidebarContext'
 
 export default function HomePage() {
+  const { toggleSidebar } = useSidebar()
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-secondary-50 via-white to-primary-50">
       {/* Modern Header */}
       <header className="header">
-        <div className="mx-auto max-w-7xl px-6 py-4">
+        <div className="mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              {/* Menu Button for Home Page */}
+              <button
+                onClick={toggleSidebar}
+                className="p-2 rounded-lg hover:bg-figma-grayLight transition-colors"
+                aria-label="Open menu"
+              >
+                <Bars3Icon className="h-6 w-6 text-figma-gray" />
+              </button>
+              
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center">
                   <PhoneIcon className="h-6 w-6 text-white" />
@@ -32,7 +46,7 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto px-6 py-20">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="animate-fade-in">
               <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
@@ -40,9 +54,10 @@ export default function HomePage() {
                 Modern VoIP Solution
               </div>
               <h1 className="text-4xl lg:text-6xl font-bold text-secondary-900 leading-tight mb-6">
-                Professional
-                <span className="bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent"> Call Center</span>
-                <br />Management
+                Professional{' '}
+                <span className="bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">Call Center</span>
+                <br />
+                Management
               </h1>
               <p className="text-lg text-secondary-600 mb-8 leading-relaxed">
                 Streamline your call center operations with our modern VoIP dashboard. 

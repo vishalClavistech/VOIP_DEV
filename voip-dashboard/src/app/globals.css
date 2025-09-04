@@ -111,6 +111,10 @@ body {
   animation: slideUp 0.3s ease-out;
 }
 
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -125,4 +129,34 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes slideInLeft {
+  from { 
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to { 
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Sidebar specific styles */
+.sidebar-overlay {
+  backdrop-filter: blur(4px);
+}
+
+/* Ensure proper z-index stacking */
+.sidebar-container {
+  z-index: 50;
+}
+
+.sidebar-overlay {
+  z-index: 40;
+}
+
+/* Prevent body scroll when sidebar is open */
+body.sidebar-open {
+  overflow: hidden;
 }
