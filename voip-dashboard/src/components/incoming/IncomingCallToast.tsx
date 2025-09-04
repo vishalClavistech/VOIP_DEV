@@ -2,23 +2,39 @@
 
 import { PhoneIcon } from '@heroicons/react/24/outline'
 
-type Props = { onClose: () => void }
+type Props = { readonly onClose: () => void }
 
 export function IncomingCallToast({ onClose }: Props) {
   return (
-    <div className="fixed left-6 bottom-6 z-50">
-      <div className="card p-4 w-[320px]">
-        <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-blue-100 text-brand-700 flex items-center justify-center">
-            <PhoneIcon className="h-6 w-6" />
+    <div className="fixed left-6 bottom-6 z-50 animate-slide-up">
+      <div className="bg-figma-white rounded-lg p-6 w-[320px] shadow-lg border border-gray-200">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center">
+            <PhoneIcon className="h-8 w-8 text-figma-white" />
           </div>
-          <div className="font-semibold text-lg">623-986-5286</div>
+          <div className="flex-1">
+            <div className="text-lg font-semibold text-figma-dark">623-986-5286</div>
+          </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <button className="rounded-md bg-green-600 text-white py-2">Accept</button>
-          <button className="rounded-md bg-red-600 text-white py-2" onClick={onClose}>Decline</button>
+
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <button className="bg-figma-green text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors">
+            Accept
+          </button>
+          <button 
+            className="bg-figma-red text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-red/90 transition-colors" 
+            onClick={onClose}
+          >
+            Decline
+          </button>
         </div>
-        <button className="mt-3 w-full btn-ghost" onClick={onClose}>More Information</button>
+
+        {/* More Information Link */}
+        <button className="text-figma-blue hover:underline text-sm" onClick={onClose}>
+          More Information
+        </button>
       </div>
     </div>
   )

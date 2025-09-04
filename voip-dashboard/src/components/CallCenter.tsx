@@ -1,68 +1,199 @@
 "use client"
 
-import { useState } from 'react'
-import { MagnifyingGlassIcon, SpeakerWaveIcon, PlusIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect } from 'react'
+import { 
+  MagnifyingGlassIcon, 
+  PhoneIcon,
+  UserCircleIcon,
+  ChevronDownIcon,
+  CalendarIcon,
+  DocumentArrowDownIcon,
+  CheckIcon,
+  EyeIcon,
+  PlayIcon,
+  PauseIcon,
+  PlusIcon,
+  SpeakerWaveIcon
+} from '@heroicons/react/24/outline'
 import { CallRecord, CallStats } from '@/lib/types'
 import { formatDateTime } from '@/lib/utils'
 import { ActiveCallPanel } from './active-call/ActiveCallPanel'
 import { IncomingCallToast } from './incoming/IncomingCallToast'
+import { Modal } from './Modal'
+import { CallModal } from './CallModal'
+import { VoipSettings } from './VoipSettings'
 
 type Props = {
-  stats: CallStats
-  query: string
-  setQuery: (q: string) => void
-  rows: CallRecord[]
+  readonly stats: CallStats
+  readonly query: string
+  readonly setQuery: (q: string) => void
+  readonly rows: CallRecord[]
 }
 
 export function CallCenter({ stats, query, setQuery, rows }: Props) {
-  const [showActive, setShowActive] = useState(true)
-  const [incoming, setIncoming] = useState(false)
+  const [showActive, setShowActive] = useState(false) // Start closed
+  const [showReceivePopup, setShowReceivePopup] = useState(false)
+  const [activeTab, setActiveTab] = useState('dashboard')
+  const [showMakeCallPopup, setShowMakeCallPopup] = useState(false)
+  const [showTestButton, setShowTestButton] = useState(true)
+  
+  // Modal states
+  const [showAddCustomerModal, setShowAddCustomerModal] = useState(false)
+  const [showConversationModal, setShowConversationModal] = useState(false)
+  const [showTeamNotesModal, setShowTeamNotesModal] = useState(false)
+  const [showParsedDataModal, setShowParsedDataModal] = useState(false)
+  const [showAudioModal, setShowAudioModal] = useState(false)
+  const [showCallModal, setShowCallModal] = useState(false)
+  const [selectedCall, setSelectedCall] = useState<CallRecord | null>(null)
+  const [customerName, setCustomerName] = useState('')
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [callTimes, setCallTimes] = useState<Record<string, number>>({})
+
+  // Generate call times only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const times: Record<string, number> = {}
+    rows.forEach((row) => {
+      times[row.id] = Math.floor(Math.random() * 200) + 10
+    })
+    setCallTimes(times)
+  }, [rows])
+
+  // Function to handle making calls
+  const handleMakeCall = (phoneNumber: string) => {
+    // Create a mock call record for the modal
+    const mockCall: CallRecord = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      fromNumber: phoneNumber,
+      contactName: 'New Call',
+      hasVoicemail: false,
+      direction: 'outbound',
+      status: 'active'
+    }
+    setSelectedCall(mockCall)
+    setShowCallModal(true)
+    setShowMakeCallPopup(false)
+  }
 
   return (
-    <main className="min-h-screen">
-      <div className="bg-gradient-to-r from-brand-700 to-brand-500 text-white">
-        <div className="mx-auto max-w-7xl px-6 py-6 flex items-center justify-between">
+    <div className="min-h-screen bg-figma-grayLight">
+      {/* Header - Top Strip */}
+      <header className="bg-gradient-to-r from-figma-blue to-figma-green text-figma-white">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-bold">VoIP</div>
           <div className="flex items-center gap-2">
-            <div className="font-semibold text-xl">VoIP</div>
-            <nav className="ml-6 flex gap-2">
-              <a className="btn-ghost text-white/90 hover:text-white" href="/dashboard">Dashboard</a>
-              <a className="btn-ghost text-white/90 hover:text-white" href="/settings">Settings</a>
-            </nav>
+              <span className="text-sm">Roman Electric, Plumbing, Heating & Cooling</span>
+              <ChevronDownIcon className="h-4 w-4" />
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="btn-ghost text-white/90 hover:text-white" onClick={() => setIncoming((s) => !s)}>
-              Toggle Incoming
+        </div>
+      </header>
+
+      {/* Tab Navigation */}
+      <div className="bg-figma-white border-b border-gray-200">
+        <div className="mx-auto max-w-7xl px-6">
+          <nav className="flex items-center gap-1">
+            <button 
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-4 py-4 my-2 font-medium flex items-center gap-2 rounded-t-lg ${
+                activeTab === 'dashboard' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white' 
+                  : 'text-figma-gray hover:text-figma-dark'
+              }`}
+            >
+              <PhoneIcon className="h-4 w-4" />
+              Dashboard
             </button>
-          </div>
+            <button 
+              onClick={() => setActiveTab('settings')}
+              className={`px-4 py-4 my-2 font-medium flex items-center gap-2 rounded-t-lg ${
+                activeTab === 'settings' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white' 
+                  : 'text-figma-gray hover:text-figma-dark'
+              }`}
+            >
+              <UserCircleIcon className="h-4 w-4" />
+              Settings
+            </button>
+          </nav>
         </div>
       </div>
 
-      <section className="mx-auto max-w-7xl px-6 py-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          <StatCard label="Total Calls" value={stats.total} />
-          <StatCard label="Completed Calls" value={stats.completed} />
-          <StatCard label="Missed Calls" value={stats.missed} />
-          <StatCard label="Voicemail" value={stats.voicemail} />
-          <StatCard label="Active Call" value={stats.active} />
+      {/* Main Content */}
+      <main className="p-6">
+        {activeTab === 'dashboard' && (
+          <>
+            {/* Stats, Search and Export in Same Row */}
+            <div className="flex items-center gap-4 mb-6">
+              {/* Stats Grid */}
+              <div className="flex gap-3 flex-1">
+                <StatCard 
+                  label="Total Calls" 
+                  value={stats.total} 
+                  color="blue"
+                  size="small"
+                />
+                <StatCard 
+                  label="Completed Calls" 
+                  value={stats.completed} 
+                  color="default"
+                  size="small"
+                />
+                <StatCard 
+                  label="Missed Calls" 
+                  value={stats.missed} 
+                  color="default"
+                />
+                <StatCard 
+                  label="Voicemail" 
+                  value={1} 
+                  color="default"
+                />
+                <StatCard 
+                  label="Active Call" 
+                  value={stats.active} 
+                  color="green"
+                />
         </div>
 
-        <div className="mt-6">
+              {/* Search and Filter Bar */}
+              <div className="flex items-center gap-4">
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                  <MagnifyingGlassIcon className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-figma-gray" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search"
-              className="w-full rounded-lg border-slate-200 bg-white pl-10 pr-3 py-2.5 shadow-sm outline-none focus:ring-2 focus:ring-brand-500"
-            />
-          </div>
-        </div>
+                    className="w-64 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue"
+                  />
+                </div>
+                <div className="relative">
+                  <CalendarIcon className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-figma-gray" />
+                  <input
+                    placeholder="Date range"
+                    className="px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue"
+                  />
+                </div>
+                <button className="px-6 py-3 bg-figma-blue text-figma-white rounded-lg font-medium flex items-center gap-2">
+                  <DocumentArrowDownIcon className="h-4 w-4" />
+                  Export CSV
+                </button>
+              </div>
+            </div>
+          </>
+        )}
 
-        <div className="mt-6 card overflow-hidden">
+        {activeTab === 'settings' && <VoipSettings />}
+
+        {/* Call Logs Table - Only show on Dashboard */}
+        {activeTab === 'dashboard' && (
+          <div className="bg-figma-white rounded-lg shadow-soft overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-slate-600">
+              <table className="w-full">
+                <thead className="bg-figma-grayLight">
                 <tr>
+                    <Th><CheckIcon className="h-4 w-4" /></Th>
                   <Th>Date</Th>
                   <Th>From number</Th>
                   <Th>Contact name</Th>
@@ -70,59 +201,552 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   <Th>Call recording</Th>
                   <Th>Summary</Th>
                   <Th>Direction</Th>
+                    <Th>Team Notes</Th>
+                    <Th>Call time</Th>
+                    <Th>Call Status</Th>
+                    <Th>Parsed Data</Th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+                <tbody className="divide-y divide-gray-200">
                 {rows.map((row) => (
-                  <tr key={row.id} className="hover:bg-slate-50">
-                    <Td>{formatDateTime(row.date)}</Td>
-                    <Td>
-                      <a href="#" className="text-brand-700 hover:underline">{row.fromNumber}</a>
+                    <tr key={row.id} className="hover:bg-figma-grayLight/50 transition-colors">
+                      <Td>
+                        <input type="checkbox" className="rounded border-gray-300" />
+                      </Td>
+                      <Td>
+                        <div className="text-sm font-medium text-figma-dark">{formatDateTime(row.date)}</div>
+                      </Td>
+                      <Td>
+                        <div className="font-mono text-sm text-figma-dark">{row.fromNumber}</div>
+                      </Td>
+                      <Td>
+                        <button 
+                          onClick={() => {
+                            setSelectedCall(row)
+                            setShowAddCustomerModal(true)
+                          }}
+                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                        >
+                          {row.contactName ? row.contactName : (
+                            <>
+                              <PlusIcon className="h-3 w-3" />
+                              Add
+                            </>
+                          )}
+                        </button>
+                      </Td>
+                      <Td>
+                        <button 
+                          onClick={() => {
+                            setSelectedCall(row)
+                            setShowConversationModal(true)
+                          }}
+                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                        >
+                          <EyeIcon className="h-3 w-3" />
+                          View Details
+                        </button>
+                      </Td>
+                      <Td>
+                        <button 
+                          onClick={() => {
+                            setSelectedCall(row)
+                            setShowAudioModal(true)
+                          }}
+                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                        >
+                          <PlayIcon className="h-3 w-3" />
+                          Listen
+                        </button>
+                      </Td>
+                      <Td>
+                        <button 
+                          onClick={() => {
+                            setSelectedCall(row)
+                            setShowConversationModal(true)
+                          }}
+                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                        >
+                          <EyeIcon className="h-3 w-3" />
+                          View Details
+                        </button>
                     </Td>
-                    <Td className="text-brand-700">{row.contactName ?? <button className="inline-flex items-center gap-1 text-brand-700"><PlusIcon className="h-4 w-4" /> Add</button>}</Td>
                     <Td>
-                      <a href="#" className="text-brand-700 hover:underline">View Details</a>
+                        <span className="text-sm text-figma-dark capitalize">{row.direction}</span>
                     </Td>
                     <Td>
-                      <button className="inline-flex items-center gap-1 text-brand-700">
-                        Listen <SpeakerWaveIcon className="h-4 w-4" />
+                        <button 
+                          onClick={() => {
+                            setSelectedCall(row)
+                            setShowTeamNotesModal(true)
+                          }}
+                          className="text-figma-blue hover:underline text-sm"
+                        >
+                          View Notes
                       </button>
                     </Td>
                     <Td>
-                      <a href="#" className="text-brand-700 hover:underline">View Details</a>
+                        <span className="text-sm text-figma-dark">{callTimes[row.id] || '--'}</span>
+                      </Td>
+                      <Td>
+                        {(() => {
+                          let statusColor = 'text-figma-blue';
+                          if (row.status === 'completed') {
+                            statusColor = 'text-figma-green';
+                          } else if (row.status === 'missed') {
+                            statusColor = 'text-figma-red';
+                          }
+                          
+                          let statusText = 'Voicemail';
+                          if (row.status === 'completed') {
+                            statusText = 'Completed';
+                          } else if (row.status === 'missed') {
+                            statusText = 'Missed';
+                          }
+                          
+                          return (
+                            <span className={`text-sm font-bold capitalize ${statusColor}`}>
+                              {statusText}
+                            </span>
+                          );
+                        })()}
+                      </Td>
+                      <Td>
+                        <button 
+                          onClick={() => {
+                            setSelectedCall(row)
+                            setShowParsedDataModal(true)
+                          }}
+                          className="px-3 py-1 bg-figma-blue text-figma-white text-xs rounded hover:bg-figma-blue/90"
+                        >
+                          View Parsed Data
+                        </button>
                     </Td>
-                    <Td className="text-slate-600">{row.direction === 'inbound' ? 'Incoming' : 'Outgoing'}</Td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
+        )}
 
+        {/* Active Call Panel */}
         {showActive && (
           <ActiveCallPanel onClose={() => setShowActive(false)} />
         )}
 
-        {incoming && (
-          <IncomingCallToast onClose={() => setIncoming(false)} />
+        {/* Receive Popup */}
+        {showReceivePopup && (
+          <IncomingCallToast onClose={() => {
+            setShowReceivePopup(false)
+            setShowTestButton(true)
+          }} />
         )}
-      </section>
-    </main>
-  )
-}
 
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="card p-4">
-      <div className="text-3xl font-semibold">{value}</div>
-      <div className="text-xs mt-2 text-slate-600">{label}</div>
+        {/* Test Button for Incoming Call - Remove in production */}
+        {showTestButton && (
+          <button 
+            onClick={() => {
+              setShowReceivePopup(true)
+              setShowTestButton(false)
+            }}
+            className="fixed bottom-6 left-6 px-4 py-2 bg-figma-green text-figma-white rounded-lg text-sm z-50"
+          >
+            Test Incoming Call
+          </button>
+        )}
+    </main>
+
+      {/* Floating Make a Call Button */}
+      <button 
+        onClick={() => setShowMakeCallPopup(true)}
+        className="fixed bottom-6 right-6 w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+      >
+        <PhoneIcon className="h-8 w-8 text-figma-white" />
+      </button>
+      <div className="fixed bottom-2 right-2 text-xs text-figma-gray text-center">
+        <div>Make a call</div>
+      </div>
+
+
+      {/* Customer Information Modal */}
+      <Modal
+        isOpen={showMakeCallPopup}
+        onClose={() => setShowMakeCallPopup(false)}
+        title=""
+        width="w-[500px]"
+      >
+        <div className="space-y-6">
+          {/* Customer Name */}
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-figma-dark">John Doe</h2>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex border-b border-gray-200">
+            <button className="px-4 py-2 bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg font-medium">
+              Customer Information
+            </button>
+            <button className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium">
+              Call History
+            </button>
+            <button className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium">
+              Job History
+            </button>
+          </div>
+
+          {/* Customer Details */}
+          <div className="space-y-4">
+            <div>
+              <div className="block text-sm font-medium text-figma-gray mb-1">Phone</div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-figma-dark">(123) 456 7890</span>
+                  <span className="text-xs bg-figma-blueLight text-figma-blue px-2 py-1 rounded">Work</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-figma-dark">(123) 456 7890</span>
+                  <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Internal</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="block text-sm font-medium text-figma-gray mb-1">Address</div>
+              <div className="flex items-center gap-2">
+                <span className="text-figma-dark">123 Address st. City, Country 122345</span>
+                <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Home</span>
+              </div>
+            </div>
+
+            <div>
+              <div className="block text-sm font-medium text-figma-gray mb-1">Email</div>
+              <span className="text-figma-dark">yourmail@mail.com</span>
+            </div>
+
+            <div>
+              <div className="block text-sm font-medium text-figma-gray mb-1">Customer tags</div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">sales</span>
+                <span className="px-3 py-1 bg-figma-blueLight text-figma-blue text-xs rounded-full">support</span>
+                <button className="w-6 h-6 bg-figma-grayLight text-figma-gray rounded-full flex items-center justify-center text-sm">+</button>
+                <button className="text-figma-blue text-sm hover:underline">+ Add a tag</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Call Action Buttons */}
+          <div className="flex justify-end gap-4">
+            {/* Call Modal Button */}
+            <div className="flex flex-col items-center gap-2">
+              <button 
+                onClick={() => {
+                  const mockCall: CallRecord = {
+                    id: Date.now().toString(),
+                    date: new Date().toISOString(),
+                    fromNumber: '+1 (555) 123-4567',
+                    contactName: 'John Doe',
+                    hasVoicemail: false,
+                    direction: 'outbound',
+                    status: 'active'
+                  }
+                  setSelectedCall(mockCall)
+                  setShowCallModal(true)
+                  setShowMakeCallPopup(false)
+                }}
+                className="w-16 h-16 bg-figma-green rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <UserCircleIcon className="h-8 w-8 text-figma-white" />
+              </button>
+              <span className="text-xs text-figma-gray">Call Modal</span>
+            </div>
+
+            {/* Make a Call Button */}
+            <div className="flex flex-col items-center gap-2">
+              <button 
+                onClick={() => {
+                  setShowMakeCallPopup(false)
+                  setShowActive(true)
+                }}
+                className="w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <PhoneIcon className="h-8 w-8 text-figma-white" />
+              </button>
+              <span className="text-xs text-figma-gray">Make a call</span>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Add Customer Modal */}
+      <Modal
+        isOpen={showAddCustomerModal}
+        onClose={() => setShowAddCustomerModal(false)}
+        title="Add Customer"
+        showSaveButton={true}
+        onSave={() => {
+          // Here you would save the customer name
+          setShowAddCustomerModal(false)
+        }}
+        saveButtonText="Save"
+        width="w-96"
+      >
+        <div className="mb-4">
+          <label htmlFor="customer-name" className="block text-sm font-medium text-figma-gray mb-2">Customer Name</label>
+          <input
+            id="customer-name"
+            type="text"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            placeholder="Enter customer name"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue"
+          />
+        </div>
+      </Modal>
+
+      {/* Conversation Modal */}
+      <Modal
+        isOpen={showConversationModal}
+        onClose={() => setShowConversationModal(false)}
+        title={`Call Conversation - ${selectedCall?.fromNumber || 'Unknown'}`}
+        width="w-4/5 max-w-4xl"
+      >
+        <div className="space-y-4">
+          <div className="bg-figma-blueLight p-4 rounded-lg">
+            <div className="font-semibold text-figma-blue mb-2">AI:</div>
+            <div className="text-figma-dark">Hello! Thank you for calling. How can I assist you today?</div>
+          </div>
+          <div className="bg-figma-grayLight p-4 rounded-lg">
+            <div className="font-semibold text-figma-gray mb-2">Human:</div>
+            <div className="text-figma-dark">I need help with my account billing. I was charged twice this month.</div>
+          </div>
+          <div className="bg-figma-blueLight p-4 rounded-lg">
+            <div className="font-semibold text-figma-blue mb-2">AI:</div>
+            <div className="text-figma-dark">I understand your concern about the double billing. Let me check your account details and resolve this issue for you.</div>
+          </div>
+          <div className="bg-figma-grayLight p-4 rounded-lg">
+            <div className="font-semibold text-figma-gray mb-2">Human:</div>
+            <div className="text-figma-dark">Thank you, that would be great. I appreciate your help.</div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Team Notes Modal */}
+      <Modal
+        isOpen={showTeamNotesModal}
+        onClose={() => setShowTeamNotesModal(false)}
+        title="Team Notes"
+        showSaveButton={true}
+        onSave={() => setShowTeamNotesModal(false)}
+        saveButtonText="Add Note"
+        width="w-96"
+      >
+        <div className="space-y-4">
+          <div className="bg-figma-grayLight p-3 rounded-lg">
+            <div className="text-sm text-figma-gray mb-1">John Doe - 2 hours ago</div>
+            <div className="text-figma-dark">Customer was very cooperative and understanding about the billing issue.</div>
+          </div>
+          <div className="bg-figma-grayLight p-3 rounded-lg">
+            <div className="text-sm text-figma-gray mb-1">Sarah Smith - 1 hour ago</div>
+            <div className="text-figma-dark">Issue resolved successfully. Customer was satisfied with the solution.</div>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="new-note" className="block text-sm font-medium text-figma-gray mb-2">Add New Note</label>
+            <textarea
+              id="new-note"
+              rows={3}
+              placeholder="Enter your note here..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue"
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Parsed Data Modal */}
+      <Modal
+        isOpen={showParsedDataModal}
+        onClose={() => setShowParsedDataModal(false)}
+        title="Parsed Data"
+        width="w-4/5 max-w-6xl"
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-figma-grayLight">
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-figma-gray">Field</th>
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-figma-gray">Value</th>
+                <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-figma-gray">Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Customer Name</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">John Smith</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-green">95%</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Issue Type</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Billing</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-green">98%</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Account Number</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">ACC-12345</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-yellow">85%</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Sentiment</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Neutral</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-green">92%</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Resolution Status</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-dark">Resolved</td>
+                <td className="border border-gray-300 px-4 py-2 text-figma-green">100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Modal>
+
+      {/* Audio Player Modal */}
+      <Modal
+        isOpen={showAudioModal}
+        onClose={() => setShowAudioModal(false)}
+        title="Audio Recording"
+        width="w-96"
+      >
+        <div className="space-y-6">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-figma-blue rounded-full flex items-center justify-center mx-auto mb-4">
+              <SpeakerWaveIcon className="h-10 w-10 text-figma-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-figma-dark mb-2">
+              Call Recording - {selectedCall?.fromNumber || 'Unknown'}
+            </h3>
+            <p className="text-sm text-figma-gray">
+              {selectedCall?.contactName || 'Unknown Contact'}
+            </p>
+          </div>
+
+          {/* Audio Controls */}
+          <div className="space-y-4">
+            {/* Progress Bar */}
+            <div className="w-full bg-figma-grayLight rounded-full h-2">
+              <div className="bg-figma-blue h-2 rounded-full" style={{ width: '35%' }}></div>
+            </div>
+
+            {/* Time Display */}
+            <div className="flex justify-between text-sm text-figma-gray">
+              <span>1:23</span>
+              <span>3:45</span>
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex items-center justify-center gap-4">
+              <button className="p-2 text-figma-gray hover:text-figma-dark">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zM6.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              
+              <button 
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="w-12 h-12 bg-figma-blue rounded-full flex items-center justify-center text-figma-white hover:bg-figma-blue/90 transition-colors"
+              >
+                {isPlaying ? (
+                  <PauseIcon className="h-6 w-6" />
+                ) : (
+                  <PlayIcon className="h-6 w-6" />
+                )}
+              </button>
+              
+              <button className="p-2 text-figma-gray hover:text-figma-dark">
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414zM14.293 4.293a1 1 0 00-1.414 0l-5 5a1 1 0 000 1.414l5 5a1 1 0 001.414-1.414L11.414 10l4.293-4.293a1 1 0 000-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Volume Control */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-figma-gray">Volume</span>
+                <span className="text-sm text-figma-gray">75%</span>
+              </div>
+              <div className="w-full bg-figma-grayLight rounded-full h-2">
+                <div className="bg-figma-green h-2 rounded-full" style={{ width: '75%' }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Call Modal */}
+      <CallModal
+        isOpen={showCallModal}
+        onClose={() => setShowCallModal(false)}
+        callRecord={selectedCall}
+        onMakeCall={handleMakeCall}
+      />
     </div>
   )
 }
 
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className="text-left px-4 py-3 font-medium">{children}</th>
+function StatCard({ 
+  label, 
+  value, 
+  color = 'default',
+  size = 'normal'
+}: { 
+  readonly label: string
+  readonly value: number
+  readonly color?: 'blue' | 'green' | 'default'
+  readonly size?: 'small' | 'normal'
+}) {
+  const isActive = color === 'green'
+  const isBlue = color === 'blue'
+  const isSmall = size === 'small'
+  
+  const cardBgClass = isActive ? 'bg-figma-green' : 'border-gray-200'
+  
+  let valueColorClass = 'text-figma-dark';
+  if (isBlue) {
+    valueColorClass = 'text-figma-blue';
+  } else if (isActive) {
+    valueColorClass = 'text-figma-white';
+  }
+  
+  const labelColorClass = isActive ? 'text-figma-white' : 'text-figma-gray'
+  
+  const cardClasses = isSmall 
+    ? `bg-figma-white rounded-lg p-2 shadow-soft border ${cardBgClass} min-h-[120px] w-24 flex flex-col justify-center`
+    : `bg-figma-white rounded-lg p-3 shadow-soft border ${cardBgClass} min-h-[100px] flex flex-col justify-center`
+  
+  const valueClasses = isSmall 
+    ? `text-xl font-bold mb-1 ${valueColorClass}`
+    : `text-2xl font-bold mb-2 ${valueColorClass}`
+  
+  const labelClasses = isSmall 
+    ? `text-xs ${labelColorClass} text-center`
+    : `text-xs ${labelColorClass}`
+  
+  return (
+    <div className={cardClasses}>
+      <div className={valueClasses}>
+        {value}
+      </div>
+      <div className={labelClasses}>
+        {label}
+      </div>
+    </div>
+  )
 }
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-4 py-3 ${className ?? ''}`}>{children}</td>
+
+function Th({ children }: { readonly children: React.ReactNode }) {
+  return <th className="text-left px-6 py-4 font-semibold text-figma-gray text-sm">{children}</th>
+}
+
+function Td({ children, className }: { readonly children: React.ReactNode; readonly className?: string }) {
+  return <td className={`px-6 py-4 ${className ?? ''}`}>{children}</td>
 }

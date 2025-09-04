@@ -3,7 +3,7 @@ import { CallRecord } from './types'
 export const callsMock: CallRecord[] = [
   {
     id: '1',
-    date: new Date().toISOString(),
+    date: "04 Sept 2025, 16:21",
     fromNumber: '(414) 334 7441',
     contactName: 'Joe Smith',
     hasVoicemail: false,
@@ -13,7 +13,7 @@ export const callsMock: CallRecord[] = [
   },
   {
     id: '2',
-    date: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+    date: "04 Sept 2025, 16:21",
     fromNumber: '(414) 334 7441',
     hasVoicemail: false,
     direction: 'outbound',
@@ -22,7 +22,7 @@ export const callsMock: CallRecord[] = [
   },
   {
     id: '3',
-    date: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
+    date: "04 Sept 2025, 16:21",
     fromNumber: '(414) 334 7441',
     contactName: 'Joe Smith',
     hasVoicemail: true,
@@ -32,7 +32,7 @@ export const callsMock: CallRecord[] = [
   },
   {
     id: '4',
-    date: new Date(Date.now() - 1000 * 60 * 220).toISOString(),
+    date: "04 Sept 2025, 16:21",
     fromNumber: '(414) 334 7441',
     contactName: 'Joe Smith',
     hasVoicemail: false,

@@ -4,7 +4,7 @@
 
 /* App globals */
 :root {
-  --bg: 247 248 250;
+  --bg: 248 250 252;
 }
 
 html, body, #__next {
@@ -12,25 +12,117 @@ html, body, #__next {
 }
 
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-figma-grayLight text-figma-dark antialiased font-sans;
 }
 
+/* Modern Card Component */
 .card {
-  @apply rounded-xl bg-white shadow-card border border-slate-200;
+  @apply rounded-2xl bg-figma-white shadow-soft border border-gray-200;
 }
 
+.card-elevated {
+  @apply rounded-2xl bg-figma-white shadow-medium border border-gray-200;
+}
+
+.card-strong {
+  @apply rounded-2xl bg-figma-white shadow-strong border border-gray-200;
+}
+
+/* Modern Button System */
 .btn {
-  @apply inline-flex items-center justify-center rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
 
 .btn-primary {
-  @apply btn bg-brand-600 text-white hover:bg-brand-700;
+  @apply btn bg-figma-blue text-figma-white hover:bg-blue-700 focus:ring-figma-blue shadow-soft hover:shadow-medium;
+}
+
+.btn-secondary {
+  @apply btn bg-figma-grayLight text-figma-gray hover:bg-gray-200 focus:ring-figma-gray;
 }
 
 .btn-ghost {
-  @apply btn bg-transparent hover:bg-slate-100;
+  @apply btn bg-transparent text-figma-gray hover:bg-figma-grayLight focus:ring-figma-gray;
 }
 
+.btn-success {
+  @apply btn bg-figma-green text-figma-white hover:bg-green-700 focus:ring-figma-green shadow-soft hover:shadow-medium;
+}
+
+.btn-danger {
+  @apply btn bg-figma-red text-figma-white hover:bg-red-700 focus:ring-figma-red shadow-soft hover:shadow-medium;
+}
+
+/* Modern Badge System */
 .badge {
-  @apply inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium;
+  @apply inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium;
+}
+
+.badge-primary {
+  @apply badge bg-figma-blueLight text-figma-blue border-figma-blue;
+}
+
+.badge-success {
+  @apply badge bg-figma-greenLight text-figma-green border-figma-green;
+}
+
+.badge-warning {
+  @apply badge bg-figma-yellowLight text-figma-yellow border-figma-yellow;
+}
+
+.badge-danger {
+  @apply badge bg-figma-redLight text-figma-red border-figma-red;
+}
+
+/* Modern Input System */
+.input {
+  @apply w-full rounded-xl border border-gray-200 bg-figma-white px-4 py-3 text-sm placeholder-figma-gray focus:border-figma-blue focus:ring-2 focus:ring-figma-blue/20 transition-all duration-200;
+}
+
+/* Modern Sidebar */
+.sidebar {
+  @apply bg-figma-white border-r border-gray-200 shadow-soft;
+}
+
+/* Modern Header */
+.header {
+  @apply bg-figma-white border-b border-gray-200 shadow-soft;
+}
+
+/* Status Indicators */
+.status-active {
+  @apply inline-flex items-center gap-1.5 text-figma-green bg-figma-greenLight px-2 py-1 rounded-lg text-xs font-medium;
+}
+
+.status-inactive {
+  @apply inline-flex items-center gap-1.5 text-figma-gray bg-figma-grayLight px-2 py-1 rounded-lg text-xs font-medium;
+}
+
+.status-pending {
+  @apply inline-flex items-center gap-1.5 text-figma-yellow bg-figma-yellowLight px-2 py-1 rounded-lg text-xs font-medium;
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
