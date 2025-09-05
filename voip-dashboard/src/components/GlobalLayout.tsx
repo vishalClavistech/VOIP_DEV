@@ -19,12 +19,12 @@ export function GlobalLayout({ children }: GlobalLayoutProps) {
   const showGlobalHeader = !isHomePage
 
   return (
-    <div className="min-h-screen bg-figma-grayLight">
+    <div className="min-h-screen bg-gray-100">
       {/* Global Sidebar */}
       <GlobalSidebar isOpen={isOpen} onClose={closeSidebar} />
       
       {/* Main Content Area */}
-      <div className="w-full">
+      <div>
         {/* Global Header - only show on non-home pages */}
         {showGlobalHeader && (
           <GlobalHeader 

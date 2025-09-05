@@ -17,7 +17,7 @@ export default function RootLayout({
   readonly children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="voip">
       <body className={inter.className}>
         <SidebarProvider>
           <GlobalLayout>{children}</GlobalLayout>

@@ -387,7 +387,11 @@ export function VoipSettings() {
       )}
 
       {/* Add Entry Modal */}
-      <Modal isOpen={showAddEntryModal} onClose={() => setShowAddEntryModal(false)}>
+      <Modal 
+        isOpen={showAddEntryModal} 
+        onClose={() => setShowAddEntryModal(false)}
+        title="Add New Entry"
+      >
         <div className="bg-figma-white rounded-lg p-6 w-full max-w-2xl">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-figma-dark">Add New Entry</h3>
@@ -471,7 +475,11 @@ export function VoipSettings() {
       </Modal>
 
       {/* Upload Modal */}
-      <Modal isOpen={showUploadModal} onClose={() => setShowUploadModal(false)}>
+      <Modal 
+        isOpen={showUploadModal} 
+        onClose={() => setShowUploadModal(false)}
+        title="Upload Audio File"
+      >
         <div className="bg-figma-white rounded-lg p-6 w-full max-w-2xl">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-figma-dark">Upload Audio File</h3>

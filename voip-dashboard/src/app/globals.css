@@ -3,103 +3,27 @@
 @tailwind utilities;
 
 /* App globals */
-:root {
-  --bg: 248 250 252;
-}
-
 html, body, #__next {
   height: 100%;
 }
 
 body {
-  @apply bg-figma-grayLight text-figma-dark antialiased font-sans;
+  @apply antialiased font-sans;
 }
 
-/* Modern Card Component */
-.card {
-  @apply rounded-2xl bg-figma-white shadow-soft border border-gray-200;
-}
-
-.card-elevated {
-  @apply rounded-2xl bg-figma-white shadow-medium border border-gray-200;
-}
-
-.card-strong {
-  @apply rounded-2xl bg-figma-white shadow-strong border border-gray-200;
-}
-
-/* Modern Button System */
-.btn {
-  @apply inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2;
-}
-
-.btn-primary {
-  @apply btn bg-figma-blue text-figma-white hover:bg-blue-700 focus:ring-figma-blue shadow-soft hover:shadow-medium;
-}
-
-.btn-secondary {
-  @apply btn bg-figma-grayLight text-figma-gray hover:bg-gray-200 focus:ring-figma-gray;
-}
-
-.btn-ghost {
-  @apply btn bg-transparent text-figma-gray hover:bg-figma-grayLight focus:ring-figma-gray;
-}
-
-.btn-success {
-  @apply btn bg-figma-green text-figma-white hover:bg-green-700 focus:ring-figma-green shadow-soft hover:shadow-medium;
-}
-
-.btn-danger {
-  @apply btn bg-figma-red text-figma-white hover:bg-red-700 focus:ring-figma-red shadow-soft hover:shadow-medium;
-}
-
-/* Modern Badge System */
-.badge {
-  @apply inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium;
-}
-
-.badge-primary {
-  @apply badge bg-figma-blueLight text-figma-blue border-figma-blue;
-}
-
-.badge-success {
-  @apply badge bg-figma-greenLight text-figma-green border-figma-green;
-}
-
-.badge-warning {
-  @apply badge bg-figma-yellowLight text-figma-yellow border-figma-yellow;
-}
-
-.badge-danger {
-  @apply badge bg-figma-redLight text-figma-red border-figma-red;
-}
-
-/* Modern Input System */
-.input {
-  @apply w-full rounded-xl border border-gray-200 bg-figma-white px-4 py-3 text-sm placeholder-figma-gray focus:border-figma-blue focus:ring-2 focus:ring-figma-blue/20 transition-all duration-200;
-}
-
-/* Modern Sidebar */
-.sidebar {
-  @apply bg-figma-white border-r border-gray-200 shadow-soft;
-}
-
-/* Modern Header */
-.header {
-  @apply bg-figma-white border-b border-gray-200 shadow-soft;
-}
+/* Custom components that DaisyUI doesn't provide */
 
 /* Status Indicators */
 .status-active {
-  @apply inline-flex items-center gap-1.5 text-figma-green bg-figma-greenLight px-2 py-1 rounded-lg text-xs font-medium;
+  @apply inline-flex items-center gap-1.5 text-green-600 bg-green-100 px-2 py-1 rounded-lg text-xs font-medium;
 }
 
 .status-inactive {
-  @apply inline-flex items-center gap-1.5 text-figma-gray bg-figma-grayLight px-2 py-1 rounded-lg text-xs font-medium;
+  @apply inline-flex items-center gap-1.5 text-gray-500 bg-gray-100 px-2 py-1 rounded-lg text-xs font-medium;
 }
 
 .status-pending {
-  @apply inline-flex items-center gap-1.5 text-figma-yellow bg-figma-yellowLight px-2 py-1 rounded-lg text-xs font-medium;
+  @apply inline-flex items-center gap-1.5 text-yellow-600 bg-yellow-100 px-2 py-1 rounded-lg text-xs font-medium;
 }
 
 /* Animation Classes */
@@ -145,15 +69,12 @@ body {
 /* Sidebar specific styles */
 .sidebar-overlay {
   backdrop-filter: blur(4px);
+  z-index: 40;
 }
 
 /* Ensure proper z-index stacking */
 .sidebar-container {
   z-index: 50;
-}
-
-.sidebar-overlay {
-  z-index: 40;
 }
 
 /* Prevent body scroll when sidebar is open */

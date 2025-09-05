@@ -6,6 +6,35 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: [
+      {
+        voip: {
+          "primary": "#3B82F6",
+          "secondary": "#10B981", 
+          "accent": "#F59E0B",
+          "neutral": "#6B7280",
+          "base-100": "#FFFFFF",
+          "base-200": "#F9FAFB",
+          "base-300": "#F3F4F6",
+          "info": "#3B82F6",
+          "success": "#10B981",
+          "warning": "#F59E0B",
+          "error": "#EF4444",
+        },
+      },
+      "light",
+      "dark",
+    ],
+    darkTheme: "dark",
+    base: true,
+    styled: true,
+    utils: true,
+    prefix: "",
+    logs: true,
+    themeRoot: ":root",
+  },
   theme: {
     extend: {
       colors: {
@@ -108,6 +137,5 @@ export default {
         '88': '22rem',
       }
     },
-  },
-  plugins: [],
+  }
 } satisfies Config

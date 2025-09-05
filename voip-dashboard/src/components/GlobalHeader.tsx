@@ -45,36 +45,32 @@ export function GlobalHeader({ onMenuClick, title = "VoIP Dashboard", showCompan
     setSelectedCompany(company)
   }
   return (
-    <header className="bg-gradient-to-r from-figma-blue to-figma-green text-figma-white">
-      <div className="mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* Menu Button */}
-            <button
-              onClick={onMenuClick}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              aria-label="Open menu"
-            >
-              <Bars3Icon className="h-6 w-6 text-white" />
-            </button>
-            
-            {/* Logo and Title */}
-            <div className="flex items-center gap-3">
-              <div className="text-2xl font-bold">{title}</div>
-            </div>
-          </div>
-          
-          {/* Right side actions */}
-          <div className="flex items-center gap-3">
-            {showCompanyInfo && (
-              <CompanyDropdown
-                companies={companies}
-                selectedCompany={selectedCompany}
-                onCompanyChange={handleCompanyChange}
-              />
-            )}
-          </div>
+    <header className="navbar bg-gradient-to-r from-blue-500 to-green-500 text-white">
+      <div className="navbar-start">
+        {/* Menu Button */}
+        <button
+          onClick={onMenuClick}
+          className="btn btn-ghost btn-square"
+          aria-label="Open menu"
+        >
+          <Bars3Icon className="h-6 w-6" />
+        </button>
+        
+        {/* Logo and Title */}
+        <div className="ml-4">
+          <div className="text-2xl font-bold">{title}</div>
         </div>
+      </div>
+      
+      {/* Right side actions */}
+      <div className="navbar-end">
+        {showCompanyInfo && (
+          <CompanyDropdown
+            companies={companies}
+            selectedCompany={selectedCompany}
+            onCompanyChange={handleCompanyChange}
+          />
+        )}
       </div>
     </header>
   )

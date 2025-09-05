@@ -5,7 +5,6 @@ import {
   MagnifyingGlassIcon, 
   PhoneIcon,
   UserCircleIcon,
-  ChevronDownIcon,
   CalendarIcon,
   DocumentArrowDownIcon,
   CheckIcon,
@@ -76,17 +75,15 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-figma-grayLight">
+    <div className="min-h-screen bg-gray-100">
       {/* Tab Navigation */}
-      <div className="bg-figma-white border-b border-gray-200">
+      <div className="bg-white border-b border-gray-200">
         <div className="mx-auto px-6">
-          <nav className="flex items-center gap-1">
+          <div className="tabs tabs-bordered">
             <button 
               onClick={() => setActiveTab('dashboard')}
-              className={`px-4 py-4 my-2 font-medium flex items-center gap-2 rounded-t-lg ${
-                activeTab === 'dashboard' 
-                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white' 
-                  : 'text-figma-gray hover:text-figma-dark'
+              className={`tab tab-bordered flex items-center gap-2 ${
+                activeTab === 'dashboard' ? 'tab-active' : ''
               }`}
             >
               <PhoneIcon className="h-4 w-4" />
@@ -94,16 +91,14 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
             </button>
             <button 
               onClick={() => setActiveTab('settings')}
-              className={`px-4 py-4 my-2 font-medium flex items-center gap-2 rounded-t-lg ${
-                activeTab === 'settings' 
-                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white' 
-                  : 'text-figma-gray hover:text-figma-dark'
+              className={`tab tab-bordered flex items-center gap-2 ${
+                activeTab === 'settings' ? 'tab-active' : ''
               }`}
             >
               <UserCircleIcon className="h-4 w-4" />
               Settings
             </button>
-          </nav>
+          </div>
         </div>
       </div>
 
@@ -146,23 +141,31 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
 
               {/* Search and Filter Bar */}
               <div className="flex items-center gap-4">
-          <div className="relative">
-                  <MagnifyingGlassIcon className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-figma-gray" />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search"
-                    className="w-64 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue"
-                  />
+                <div className="form-control">
+                  <div className="input-group">
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search"
+                      className="input input-bordered w-64"
+                    />
+                    <button className="btn btn-square">
+                      <MagnifyingGlassIcon className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
-                <div className="relative">
-                  <CalendarIcon className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-figma-gray" />
-                  <input
-                    placeholder="Date range"
-                    className="px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue"
-                  />
+                <div className="form-control">
+                  <div className="input-group">
+                    <input
+                      placeholder="Date range"
+                      className="input input-bordered"
+                    />
+                    <button className="btn btn-square">
+                      <CalendarIcon className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
-                <button className="px-6 py-3 bg-figma-blue text-figma-white rounded-lg font-medium flex items-center gap-2">
+                <button className="btn btn-primary">
                   <DocumentArrowDownIcon className="h-4 w-4" />
                   Export CSV
                 </button>
@@ -175,10 +178,10 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
 
         {/* Call Logs Table - Only show on Dashboard */}
         {activeTab === 'dashboard' && (
-          <div className="bg-figma-white rounded-lg shadow-soft overflow-hidden">
-          <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-figma-grayLight">
+          <div className="card bg-white shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="table table-zebra w-full">
+                <thead className="bg-gray-50">
                 <tr>
                     <Th><CheckIcon className="h-4 w-4" /></Th>
                   <Th>Date</Th>
@@ -194,17 +197,17 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                     <Th>Parsed Data</Th>
                 </tr>
               </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody>
                 {rows.map((row) => (
-                    <tr key={row.id} className="hover:bg-figma-grayLight/50 transition-colors">
+                    <tr key={row.id} className="hover">
                       <Td>
-                        <input type="checkbox" className="rounded border-gray-300" />
+                        <input type="checkbox" className="checkbox checkbox-sm" />
                       </Td>
                       <Td>
-                        <div className="text-sm font-medium text-figma-dark">{formatDateTime(row.date)}</div>
+                        <div className="text-sm font-medium text-gray-900">{formatDateTime(row.date)}</div>
                       </Td>
                       <Td>
-                        <div className="font-mono text-sm text-figma-dark">{row.fromNumber}</div>
+                        <div className="font-mono text-sm text-gray-900">{row.fromNumber}</div>
                       </Td>
                       <Td>
                         <button 
