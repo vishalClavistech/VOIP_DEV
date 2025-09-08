@@ -89,15 +89,28 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
               <PhoneIcon className="h-4 w-4" />
               Dashboard
             </button>
-            <button 
-              onClick={() => setActiveTab('settings')}
-              className={`tab tab-bordered flex items-center gap-2 py-4 h-auto rounded-md text-md text-white focus:outline-none focus:ring-4 focus:ring-primary-500 border-2 border-success-500 hover:border-primary-500 ${
-                activeTab === 'settings' ? 'tab-active' : ''
-              }`}
-            >
-              <UserCircleIcon className="h-4 w-4" />
-              Settings
-            </button>
+            <button
+  onClick={() => setActiveTab('settings')}
+  className={`
+    relative flex items-center gap-2 h-auto rounded-md
+    bg-gradient-to-r from-primary-500 to-success-500
+    p-[2px]
+    focus:outline-none focus:ring-4 focus:ring-primary-500
+    ${activeTab === 'settings' ? 'tab-active' : ''}
+  `}
+>
+  {/* Inner white background */}
+  <div className="flex items-center gap-2 rounded-md bg-white w-full h-full px-4 py-2">
+    <UserCircleIcon
+      className="h-4 w-4 text-primary"
+    />
+    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-success-500 font-medium">
+      Settings
+    </span>
+  </div>
+</button>
+
+
           </div>
         </div>
       </div>
@@ -694,44 +707,38 @@ function StatCard({
   readonly color?: 'blue' | 'green' | 'default'
   readonly size?: 'small' | 'normal'
 }) {
-  const isActive = color === 'green'
-  const isBlue = color === 'blue'
-  const isSmall = size === 'small'
-  
-  const cardBgClass = isActive ? 'bg-figma-green' : 'border-gray-200'
-  
-  let valueColorClass = 'text-figma-dark';
-  if (isBlue) {
-    valueColorClass = 'text-figma-blue';
-  } else if (isActive) {
-    valueColorClass = 'text-figma-white';
-  }
-  
-  const labelColorClass = isActive ? 'text-figma-white' : 'text-figma-gray'
-  
-  const cardClasses = isSmall 
-    ? `bg-figma-white rounded-lg p-2 shadow-soft border ${cardBgClass} min-h-[120px] w-24 flex flex-col justify-center`
-    : `bg-figma-white rounded-lg p-3 shadow-soft border ${cardBgClass} min-h-[100px] flex flex-col justify-center input-success`
-  
-  const valueClasses = isSmall 
-    ? `text-3xl font-bold mb-1 ${valueColorClass}`
-    : `text-3xl font-bold mb-2 ${valueColorClass}`
-  
-  const labelClasses = isSmall 
-    ? `text-xs ${labelColorClass} text-center`
-    : `text-xs ${labelColorClass}`
-  
+  const isActive = color === 'green';
+  const isBlue = color === 'blue';
+  const isSmall = size === 'small';
+
+  // Text colors
+  const valueColorClass = isBlue ? 'text-figma-blue' : isActive ? 'text-figma-white' : 'text-figma-dark';
+  const labelColorClass = isActive ? 'text-figma-white' : 'text-figma-gray';
+
+  // Card background: white normally, green when active
+  const cardBgClass = isActive ? 'bg-success-500' : 'bg-figma-white';
+
+  // Card size
+  const baseCardClasses = isSmall
+    ? `rounded-lg p-2 min-h-[120px] w-36 flex flex-col justify-center`
+    : `rounded-lg p-3 min-h-[100px] flex flex-col justify-center`;
+
+  // Border color
+  const borderClass = isBlue ? 'border-figma-blue' : isActive ? 'border-success-500' : 'border-gray-200';
+
   return (
-    <div className={cardClasses}>
-      <div className={valueClasses}>
+    <div className={`${baseCardClasses} ${cardBgClass} border-2 ${borderClass} shadow-soft`}>
+      <div className={isSmall ? `text-3xl font-bold mb-1 ${valueColorClass}` : `text-3xl font-bold mb-2 ${valueColorClass}`}>
         {value}
       </div>
-      <div className={labelClasses}>
+      <div className={isSmall ? `text-xs ${labelColorClass} text-center` : `text-xs ${labelColorClass}`}>
         {label}
       </div>
     </div>
   )
 }
+
+
 
 function Th({ children }: { readonly children: React.ReactNode }) {
   return <th className="text-left px-6 py-4 font-semibold text-figma-gray text-sm">{children}</th>
