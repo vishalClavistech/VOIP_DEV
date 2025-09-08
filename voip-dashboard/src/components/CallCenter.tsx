@@ -78,11 +78,11 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
     <div className="min-h-screen bg-gray-100">
       {/* Tab Navigation */}
       <div className="bg-white border-b border-gray-200">
-        <div className="mx-auto px-6">
+        <div className="mx-auto px-6 py-6">
           <div className="tabs tabs-bordered">
             <button 
               onClick={() => setActiveTab('dashboard')}
-              className={`tab tab-bordered flex items-center gap-2 ${
+              className={`tab tab-bordered flex items-center gap-2 me-2 py-4 h-auto rounded-md text-md bg-gradient-to-r from-primary-500 to-success-500 text-white ${
                 activeTab === 'dashboard' ? 'tab-active' : ''
               }`}
             >
@@ -91,7 +91,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
             </button>
             <button 
               onClick={() => setActiveTab('settings')}
-              className={`tab tab-bordered flex items-center gap-2 ${
+              className={`tab tab-bordered flex items-center gap-2 py-4 h-auto rounded-md text-md text-white focus:outline-none focus:ring-4 focus:ring-primary-500 border-2 border-success-500 hover:border-primary-500 ${
                 activeTab === 'settings' ? 'tab-active' : ''
               }`}
             >
@@ -155,7 +155,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   </div>
                 </div>
                 <div className="form-control">
-                  <div className="input-group">
+                  <div className="input-group flex">
                     <input
                       placeholder="Date range"
                       className="input input-bordered"
@@ -165,8 +165,8 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                     </button>
                   </div>
                 </div>
-                <button className="btn btn-primary">
-                  <DocumentArrowDownIcon className="h-4 w-4" />
+                <button className="flex items-center gap-2 me-2 p-4 h-auto rounded-md text-md bg-gradient-to-r from-primary-500 to-success-500 text-white">
+                  {/* <DocumentArrowDownIcon className="h-4 w-4" /> */}
                   Export CSV
                 </button>
               </div>
@@ -711,11 +711,11 @@ function StatCard({
   
   const cardClasses = isSmall 
     ? `bg-figma-white rounded-lg p-2 shadow-soft border ${cardBgClass} min-h-[120px] w-24 flex flex-col justify-center`
-    : `bg-figma-white rounded-lg p-3 shadow-soft border ${cardBgClass} min-h-[100px] flex flex-col justify-center`
+    : `bg-figma-white rounded-lg p-3 shadow-soft border ${cardBgClass} min-h-[100px] flex flex-col justify-center input-success`
   
   const valueClasses = isSmall 
-    ? `text-xl font-bold mb-1 ${valueColorClass}`
-    : `text-2xl font-bold mb-2 ${valueColorClass}`
+    ? `text-3xl font-bold mb-1 ${valueColorClass}`
+    : `text-3xl font-bold mb-2 ${valueColorClass}`
   
   const labelClasses = isSmall 
     ? `text-xs ${labelColorClass} text-center`

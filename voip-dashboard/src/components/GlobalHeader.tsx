@@ -45,7 +45,7 @@ export function GlobalHeader({ onMenuClick, title = "VoIP Dashboard", showCompan
     setSelectedCompany(company)
   }
   return (
-    <header className="navbar bg-gradient-to-r from-blue-500 to-green-500 text-white">
+    <header className="navbar bg-gradient-to-r from-primary-500 to-success-500 text-white">
       <div className="navbar-start">
         {/* Menu Button */}
         <button
