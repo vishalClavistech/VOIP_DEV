@@ -409,9 +409,6 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
       >
         <PhoneIcon className="h-8 w-8 text-figma-white" />
       </button>
-      <div className="fixed bottom-2 right-2 text-xs text-figma-gray text-center">
-        <div>Make a call</div>
-      </div>
 
 
       {/* Customer Information Modal */}

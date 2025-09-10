@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { SidebarProvider } from '@/contexts/SidebarContext'
+import { TwilioProvider } from '@/contexts/TwilioContext'
 import { GlobalLayout } from '@/components/GlobalLayout'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="en" data-theme="voip">
       <body className={inter.className}>
         <SidebarProvider>
-          <GlobalLayout>{children}</GlobalLayout>
+          <TwilioProvider>
+            <GlobalLayout>{children}</GlobalLayout>
+          </TwilioProvider>
         </SidebarProvider>
       </body>
     </html>
