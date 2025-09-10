@@ -12,7 +12,8 @@ import {
   PlayIcon,
   PauseIcon,
   PlusIcon,
-  SpeakerWaveIcon
+  SpeakerWaveIcon,
+  UserIcon
 } from '@heroicons/react/24/outline'
 import { CallRecord, CallStats } from '@/lib/types'
 import { formatDateTime } from '@/lib/utils'
@@ -155,14 +156,14 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
               {/* Search and Filter Bar */}
               <div className="flex items-center gap-4">
                 <div className="form-control">
-                  <div className="input-group">
+                  <div className="input-group relative">
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Search"
-                      className="input input-bordered w-64"
+                      className="input input-bordered w-64 text-xs"
                     />
-                    <button className="btn btn-square">
+                    <button className="btn btn-square absolute right-0 z-10 bg-transparent border-0">
                       <MagnifyingGlassIcon className="h-5 w-5" />
                     </button>
                   </div>
@@ -196,9 +197,9 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
               <table className="table table-zebra w-full">
                 <thead className="bg-gray-50">
                 <tr>
-                    <Th><CheckIcon className="h-4 w-4" /></Th>
+                  <Th><input type="checkbox" className="checkbox checkbox-sm" /></Th>
                   <Th>Date</Th>
-                  <Th>From number</Th>
+                  <Th>From number</Th> 
                   <Th>Contact name</Th>
                   <Th>Call transcript</Th>
                   <Th>Call recording</Th>
@@ -258,7 +259,8 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                           }}
                           className="text-figma-blue hover:underline text-sm flex items-center gap-1"
                         >
-                          <PlayIcon className="h-3 w-3" />
+                          {/* <PlayIcon className="h-3 w-3" /> */}
+                          <SpeakerWaveIcon className="h-4 w-4" />
                           Listen
                         </button>
                       </Td>
@@ -320,7 +322,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowParsedDataModal(true)
                           }}
-                          className="px-3 py-1 bg-figma-blue text-figma-white text-xs rounded hover:bg-figma-blue/90"
+                          className="px-3 py-2 bg-figma-blue text-figma-white text-xs rounded-full hover:bg-figma-blue/90"
                         >
                           View Parsed Data
                         </button>
@@ -363,7 +365,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
       {/* Floating Make a Call Button */}
       <button 
         onClick={() => setShowMakeCallPopup(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+        className="fixed bottom-6 right-6 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 z-50"
       >
         <PhoneIcon className="h-8 w-8 text-figma-white" />
       </button>
@@ -385,10 +387,22 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
             <h2 className="text-2xl font-bold text-figma-dark">John Doe</h2>
           </div>
 
+          {/* name of each tab group should be unique */}
+          <div className="tabs tabs-border">
+            <input type="radio" name="my_tabs_2" className="tab" aria-label="Customer Information" />
+            <div className="tab-content border-base-300 bg-base-100 p-10">Tab content 1</div>
+
+            <input type="radio" name="my_tabs_2" className="tab" aria-label="Tab 2" defaultChecked />
+            <div className="tab-content border-base-300 bg-base-100 p-10">Tab content 2</div>
+
+            <input type="radio" name="my_tabs_2" className="tab" aria-label="Tab 3" />
+            <div className="tab-content border-base-300 bg-base-100 p-10">Tab content 3</div>
+          </div>
+
           {/* Tabs */}
           <div className="flex border-b border-gray-200">
             <button className="px-4 py-2 bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg font-medium">
-              Customer Information
+              <UserIcon className="h-6 w-6 text-blue-500" /> Customer Information
             </button>
             <button className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium">
               Call History
@@ -716,22 +730,22 @@ function StatCard({
   const labelColorClass = isActive ? 'text-figma-white' : 'text-figma-gray';
 
   // Card background: white normally, green when active
-  const cardBgClass = isActive ? 'bg-success-500' : 'bg-figma-white';
+  const cardBgClass = isActive ? 'bg-[#7DBD4C]' : 'bg-figma-white';
 
   // Card size
   const baseCardClasses = isSmall
     ? `rounded-lg p-2 min-h-[120px] w-36 flex flex-col justify-center`
-    : `rounded-lg p-3 min-h-[100px] flex flex-col justify-center`;
+    : `rounded-lg p-3 min-h-[100px] w-36 flex flex-col justify-center`;
 
   // Border color
-  const borderClass = isBlue ? 'border-figma-blue' : isActive ? 'border-success-500' : 'border-gray-200';
+  const borderClass = isBlue ? 'border-figma-blue' : isActive ? 'bg-[#7DBD4C]' : 'border-gray-200';
 
   return (
     <div className={`${baseCardClasses} ${cardBgClass} border-2 ${borderClass} shadow-soft`}>
       <div className={isSmall ? `text-3xl font-bold mb-1 ${valueColorClass}` : `text-3xl font-bold mb-2 ${valueColorClass}`}>
         {value}
       </div>
-      <div className={isSmall ? `text-xs ${labelColorClass} text-center` : `text-xs ${labelColorClass}`}>
+      <div className={isSmall ? `text-sm ${labelColorClass}` : `text-sm ${labelColorClass}`}>
         {label}
       </div>
     </div>
@@ -741,9 +755,9 @@ function StatCard({
 
 
 function Th({ children }: { readonly children: React.ReactNode }) {
-  return <th className="text-left px-6 py-4 font-semibold text-figma-gray text-sm">{children}</th>
+  return <th className="text-left px-4 py-4 font-semibold text-figma-gray text-sm">{children}</th>
 }
 
 function Td({ children, className }: { readonly children: React.ReactNode; readonly className?: string }) {
-  return <td className={`px-6 py-4 ${className ?? ''}`}>{children}</td>
+  return <td className={`px-4 py-4 ${className ?? ''}`}>{children}</td>
 }

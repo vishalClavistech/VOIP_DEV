@@ -10,7 +10,7 @@ export function IncomingCallToast({ onClose }: Props) {
       <div className="bg-figma-white rounded-lg p-6 w-[320px] shadow-lg border border-gray-200">
         {/* Header */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center">
+          <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center">
             <PhoneIcon className="h-8 w-8 text-figma-white" />
           </div>
           <div className="flex-1">
@@ -20,7 +20,7 @@ export function IncomingCallToast({ onClose }: Props) {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <button className="bg-figma-green text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors">
+          <button className="bg-[#7DBD4C] text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors">
             Accept
           </button>
           <button 
@@ -32,7 +32,7 @@ export function IncomingCallToast({ onClose }: Props) {
         </div>
 
         {/* More Information Link */}
-        <button className="text-figma-blue hover:underline text-sm" onClick={onClose}>
+        <button className="text-mainColor-500 hover:underline text-sm border-2 border-mainColor-500 rounded p-4" onClick={onClose}>
           More Information
         </button>
       </div>
