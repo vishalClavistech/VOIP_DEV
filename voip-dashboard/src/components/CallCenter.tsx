@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { 
   MagnifyingGlassIcon, 
   PhoneIcon,
@@ -12,8 +12,7 @@ import {
   PlayIcon,
   PauseIcon,
   PlusIcon,
-  SpeakerWaveIcon,
-  UserIcon
+  SpeakerWaveIcon
 } from '@heroicons/react/24/outline'
 import { CallRecord, CallStats } from '@/lib/types'
 import { formatDateTime } from '@/lib/utils'
@@ -35,7 +34,11 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
   const [showReceivePopup, setShowReceivePopup] = useState(false)
   const [activeTab, setActiveTab] = useState('dashboard')
   const [showMakeCallPopup, setShowMakeCallPopup] = useState(false)
+  const [showMakeCallModal, setShowMakeCallModal] = useState(false)
   const [showTestButton, setShowTestButton] = useState(true)
+  const [customerModalTab, setCustomerModalTab] = useState('customer-info')
+  const [makeCallModalTab, setMakeCallModalTab] = useState('customer-info')
+  const [selectedStatsTab, setSelectedStatsTab] = useState('total')
   
   // Modal states
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false)
@@ -57,6 +60,25 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
     })
     setCallTimes(times)
   }, [rows])
+
+  // Filter data based on selected stats tab
+  const filteredRows = useMemo(() => {
+    let filteredData = rows
+    
+    // Filter by selected stats tab
+    if (selectedStatsTab === 'completed') {
+      filteredData = rows.filter((c) => c.status === 'completed')
+    } else if (selectedStatsTab === 'missed') {
+      filteredData = rows.filter((c) => c.status === 'missed')
+    } else if (selectedStatsTab === 'voicemail') {
+      filteredData = rows.filter((c) => c.hasVoicemail)
+    } else if (selectedStatsTab === 'active') {
+      filteredData = rows.filter((c) => c.status === 'active')
+    }
+    // 'total' shows all data
+    
+    return filteredData
+  }, [rows, selectedStatsTab])
 
   // Function to handle making calls
   const handleMakeCall = (phoneNumber: string) => {
@@ -80,38 +102,29 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
       {/* Tab Navigation */}
       <div className="bg-white border-b border-gray-200">
         <div className="mx-auto px-6 py-6">
-          <div className="tabs tabs-bordered">
+          <div className="flex gap-2">
             <button 
               onClick={() => setActiveTab('dashboard')}
-              className={`tab tab-bordered flex items-center gap-2 me-2 py-4 h-auto rounded-md text-md bg-gradient-to-r from-primary-500 to-success-500 text-white ${
-                activeTab === 'dashboard' ? 'tab-active' : ''
+              className={`flex items-center gap-2 px-6 py-4 rounded-md text-md font-medium transition-all duration-200 ${
+                activeTab === 'dashboard' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg' 
+                  : 'border-2 border-figma-blue text-figma-blue'
               }`}
             >
               <PhoneIcon className="h-4 w-4" />
               Dashboard
             </button>
-            <button
-  onClick={() => setActiveTab('settings')}
-  className={`
-    relative flex items-center gap-2 h-auto rounded-md
-    bg-gradient-to-r from-primary-500 to-success-500
-    p-[2px]
-    focus:outline-none focus:ring-4 focus:ring-primary-500
-    ${activeTab === 'settings' ? 'tab-active' : ''}
-  `}
->
-  {/* Inner white background */}
-  <div className="flex items-center gap-2 rounded-md bg-white w-full h-full px-4 py-2">
-    <UserCircleIcon
-      className="h-4 w-4 text-primary"
-    />
-    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-success-500 font-medium">
-      Settings
-    </span>
-  </div>
-</button>
-
-
+            <button 
+              onClick={() => setActiveTab('settings')}
+              className={`flex items-center gap-2 px-6 py-4 rounded-md text-md font-medium transition-all duration-200 ${
+                activeTab === 'settings' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg' 
+                  : 'border-2 border-figma-blue text-figma-blue'
+              }`}
+            >
+              <UserCircleIcon className="h-4 w-4" />
+              Settings
+            </button>
           </div>
         </div>
       </div>
@@ -124,46 +137,74 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
             <div className="flex items-center gap-4 mb-6">
               {/* Stats Grid */}
               <div className="flex gap-3 flex-1">
-                <StatCard 
-                  label="Total Calls" 
-                  value={stats.total} 
-                  color="blue"
-                  size="small"
-                />
-                <StatCard 
-                  label="Completed Calls" 
-                  value={stats.completed} 
-                  color="default"
-                  size="small"
-                />
-                <StatCard 
-                  label="Missed Calls" 
-                  value={stats.missed} 
-                  color="default"
-                />
-                <StatCard 
-                  label="Voicemail" 
-                  value={1} 
-                  color="default"
-                />
-                <StatCard 
-                  label="Active Call" 
-                  value={stats.active} 
-                  color="green"
-                />
+                <button
+                  onClick={() => setSelectedStatsTab('total')}
+                  className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                    selectedStatsTab === 'total'
+                      ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg'
+                      : 'border-figma-blue text-figma-blue'
+                  }`}
+                >
+                  <div className="text-2xl font-bold">{stats.total}</div>
+                  <div className="text-sm font-medium">Total Calls</div>
+                </button>
+                <button
+                  onClick={() => setSelectedStatsTab('completed')}
+                  className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                    selectedStatsTab === 'completed'
+                      ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg'
+                      : 'border-figma-blue text-figma-blue'
+                  }`}
+                >
+                  <div className="text-2xl font-bold">{stats.completed}</div>
+                  <div className="text-sm font-medium">Completed Calls</div>
+                </button>
+                <button
+                  onClick={() => setSelectedStatsTab('missed')}
+                  className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                    selectedStatsTab === 'missed'
+                      ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg'
+                      : 'border-figma-blue text-figma-blue'
+                  }`}
+                >
+                  <div className="text-2xl font-bold">{stats.missed}</div>
+                  <div className="text-sm font-medium">Missed Calls</div>
+                </button>
+                <button
+                  onClick={() => setSelectedStatsTab('voicemail')}
+                  className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                    selectedStatsTab === 'voicemail'
+                      ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg'
+                      : 'border-figma-blue text-figma-blue'
+                  }`}
+                >
+                  <div className="text-2xl font-bold">{stats.voicemail}</div>
+                  <div className="text-sm font-medium">Voicemail</div>
+                </button>
+                <button
+                  onClick={() => setSelectedStatsTab('active')}
+                  className={`flex flex-col items-center p-4 rounded-lg border-2 transition-all duration-200 ${
+                    selectedStatsTab === 'active'
+                      ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white shadow-lg'
+                      : 'border-figma-blue text-figma-blue'
+                  }`}
+                >
+                  <div className="text-2xl font-bold">{stats.active}</div>
+                  <div className="text-sm font-medium">Active Call</div>
+                </button>
         </div>
 
               {/* Search and Filter Bar */}
               <div className="flex items-center gap-4">
                 <div className="form-control">
-                  <div className="input-group relative">
+                  <div className="input-group">
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Search"
-                      className="input input-bordered w-64 text-xs"
+                      className="input input-bordered w-64"
                     />
-                    <button className="btn btn-square absolute right-0 z-10 bg-transparent border-0">
+                    <button className="btn btn-square">
                       <MagnifyingGlassIcon className="h-5 w-5" />
                     </button>
                   </div>
@@ -197,9 +238,9 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
               <table className="table table-zebra w-full">
                 <thead className="bg-gray-50">
                 <tr>
-                  <Th><input type="checkbox" className="checkbox checkbox-sm" /></Th>
+                    <Th><CheckIcon className="h-4 w-4" /></Th>
                   <Th>Date</Th>
-                  <Th>From number</Th> 
+                  <Th>From number</Th>
                   <Th>Contact name</Th>
                   <Th>Call transcript</Th>
                   <Th>Call recording</Th>
@@ -212,7 +253,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                 </tr>
               </thead>
                 <tbody>
-                {rows.map((row) => (
+                {filteredRows.map((row: CallRecord) => (
                     <tr key={row.id} className="hover">
                       <Td>
                         <input type="checkbox" className="checkbox checkbox-sm" />
@@ -229,7 +270,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowAddCustomerModal(true)
                           }}
-                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                          className="text-figma-blue text-sm flex items-center gap-1"
                         >
                           {row.contactName ? row.contactName : (
                             <>
@@ -245,7 +286,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowConversationModal(true)
                           }}
-                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                          className="text-figma-blue text-sm flex items-center gap-1"
                         >
                           <EyeIcon className="h-3 w-3" />
                           View Details
@@ -257,10 +298,9 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowAudioModal(true)
                           }}
-                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                          className="text-figma-blue text-sm flex items-center gap-1"
                         >
-                          {/* <PlayIcon className="h-3 w-3" /> */}
-                          <SpeakerWaveIcon className="h-4 w-4" />
+                          <PlayIcon className="h-3 w-3" />
                           Listen
                         </button>
                       </Td>
@@ -270,7 +310,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowConversationModal(true)
                           }}
-                          className="text-figma-blue hover:underline text-sm flex items-center gap-1"
+                          className="text-figma-blue text-sm flex items-center gap-1"
                         >
                           <EyeIcon className="h-3 w-3" />
                           View Details
@@ -285,7 +325,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowTeamNotesModal(true)
                           }}
-                          className="text-figma-blue hover:underline text-sm"
+                          className="text-figma-blue text-sm"
                         >
                           View Notes
                       </button>
@@ -322,7 +362,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                             setSelectedCall(row)
                             setShowParsedDataModal(true)
                           }}
-                          className="px-3 py-2 bg-figma-blue text-figma-white text-xs rounded-full hover:bg-figma-blue/90"
+                          className="px-3 py-1 bg-figma-blue text-figma-white text-xs rounded"
                         >
                           View Parsed Data
                         </button>
@@ -364,8 +404,8 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
 
       {/* Floating Make a Call Button */}
       <button 
-        onClick={() => setShowMakeCallPopup(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 z-50"
+        onClick={() => setShowMakeCallModal(true)}
+        className="fixed bottom-6 right-6 w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center shadow-lg transition-all duration-300 z-50"
       >
         <PhoneIcon className="h-8 w-8 text-figma-white" />
       </button>
@@ -380,6 +420,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
         onClose={() => setShowMakeCallPopup(false)}
         title=""
         width="w-[500px]"
+        position="center"
       >
         <div className="space-y-6">
           {/* Customer Name */}
@@ -387,70 +428,248 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
             <h2 className="text-2xl font-bold text-figma-dark">John Doe</h2>
           </div>
 
-          {/* name of each tab group should be unique */}
-          <div className="tabs tabs-border">
-            <input type="radio" name="my_tabs_2" className="tab" aria-label="Customer Information" />
-            <div className="tab-content border-base-300 bg-base-100 p-10">Tab content 1</div>
-
-            <input type="radio" name="my_tabs_2" className="tab" aria-label="Tab 2" defaultChecked />
-            <div className="tab-content border-base-300 bg-base-100 p-10">Tab content 2</div>
-
-            <input type="radio" name="my_tabs_2" className="tab" aria-label="Tab 3" />
-            <div className="tab-content border-base-300 bg-base-100 p-10">Tab content 3</div>
-          </div>
-
           {/* Tabs */}
           <div className="flex border-b border-gray-200">
-            <button className="px-4 py-2 bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg font-medium">
-              <UserIcon className="h-6 w-6 text-blue-500" /> Customer Information
+            <button 
+              onClick={() => setCustomerModalTab('customer-info')}
+              className={`px-4 py-2 font-medium transition-colors flex items-center gap-2 ${
+                customerModalTab === 'customer-info' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg' 
+                  : 'text-figma-gray'
+              }`}
+            >
+              <UserCircleIcon className="h-4 w-4" />
+              Customer Information
             </button>
-            <button className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium">
+            <button 
+              onClick={() => setCustomerModalTab('call-history')}
+              className={`px-4 py-2 font-medium transition-colors flex items-center gap-2 ${
+                customerModalTab === 'call-history' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg' 
+                  : 'text-figma-gray'
+              }`}
+            >
+              <PhoneIcon className="h-4 w-4" />
               Call History
             </button>
-            <button className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium">
+            <button 
+              onClick={() => setCustomerModalTab('job-history')}
+              className={`px-4 py-2 font-medium transition-colors flex items-center gap-2 ${
+                customerModalTab === 'job-history' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg' 
+                  : 'text-figma-gray'
+              }`}
+            >
+              <DocumentArrowDownIcon className="h-4 w-4" />
               Job History
             </button>
           </div>
 
-          {/* Customer Details */}
-          <div className="space-y-4">
-            <div>
-              <div className="block text-sm font-medium text-figma-gray mb-1">Phone</div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-figma-dark">(123) 456 7890</span>
-                  <span className="text-xs bg-figma-blueLight text-figma-blue px-2 py-1 rounded">Work</span>
+          {/* Tab Content */}
+          {customerModalTab === 'customer-info' && (
+            <div className="space-y-4">
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Phone</div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-figma-dark">(123) 456 7890</span>
+                    <span className="text-xs bg-figma-blueLight text-figma-blue px-2 py-1 rounded">Work</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-figma-dark">(123) 456 7890</span>
+                    <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Internal</span>
+                  </div>
                 </div>
+              </div>
+
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Address</div>
                 <div className="flex items-center gap-2">
-                  <span className="text-figma-dark">(123) 456 7890</span>
-                  <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Internal</span>
+                  <span className="text-figma-dark">123 Address st. City, Country 122345</span>
+                  <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Home</span>
+                </div>
+              </div>
+
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Email</div>
+                <span className="text-figma-dark">yourmail@mail.com</span>
+              </div>
+
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Customer tags</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">sales</span>
+                  <span className="px-3 py-1 bg-figma-blueLight text-figma-blue text-xs rounded-full">support</span>
+                  <button className="w-6 h-6 bg-figma-grayLight text-figma-gray rounded-full flex items-center justify-center text-sm">+</button>
+                  <button className="text-figma-blue text-sm">+ Add a tag</button>
                 </div>
               </div>
             </div>
+          )}
 
-            <div>
-              <div className="block text-sm font-medium text-figma-gray mb-1">Address</div>
-              <div className="flex items-center gap-2">
-                <span className="text-figma-dark">123 Address st. City, Country 122345</span>
-                <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Home</span>
+          {customerModalTab === 'call-history' && (
+            <div className="space-y-4">
+              <div className="text-center text-figma-gray mb-4">
+                <CalendarIcon className="h-12 w-12 mx-auto mb-2" />
+                <p>Call History for John Doe</p>
+              </div>
+              
+              <div className="space-y-3">
+                {/* Call History Item 1 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PhoneIcon className="h-4 w-4 text-figma-blue" />
+                        <span className="font-medium text-figma-dark">Outbound Call</span>
+                        <span className="text-xs bg-figma-green text-figma-white px-2 py-1 rounded">Completed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray">Duration: 5m 32s</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 15, 2023 at 2:30 PM</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <PlayIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call History Item 2 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PhoneIcon className="h-4 w-4 text-figma-blue" />
+                        <span className="font-medium text-figma-dark">Inbound Call</span>
+                        <span className="text-xs bg-figma-gray text-figma-white px-2 py-1 rounded">Missed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray">Duration: 0s</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 14, 2023 at 10:15 AM</div>
+                      <div className="text-sm text-figma-blue mt-1">📞 Has Voicemail</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <PlayIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call History Item 3 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PhoneIcon className="h-4 w-4 text-figma-blue" />
+                        <span className="font-medium text-figma-dark">Outbound Call</span>
+                        <span className="text-xs bg-figma-green text-figma-white px-2 py-1 rounded">Completed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray">Duration: 12m 45s</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 13, 2023 at 4:20 PM</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <PlayIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          )}
 
-            <div>
-              <div className="block text-sm font-medium text-figma-gray mb-1">Email</div>
-              <span className="text-figma-dark">yourmail@mail.com</span>
-            </div>
+          {customerModalTab === 'job-history' && (
+            <div className="space-y-4">
+              <div className="text-center text-figma-gray mb-4">
+                <DocumentArrowDownIcon className="h-12 w-12 mx-auto mb-2" />
+                <p>Job History for John Doe</p>
+              </div>
+              
+              <div className="space-y-3">
+                {/* Job History Item 1 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium text-figma-dark">Service Call #SC-2023-001</span>
+                        <span className="text-xs bg-figma-green text-figma-white px-2 py-1 rounded">Completed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray mb-2">HVAC System Repair</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 10, 2023</div>
+                      <div className="text-sm text-figma-gray">Technician: Mike Johnson</div>
+                      <div className="text-sm text-figma-gray">Duration: 2h 30m</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <DocumentArrowDownIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-            <div>
-              <div className="block text-sm font-medium text-figma-gray mb-1">Customer tags</div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">sales</span>
-                <span className="px-3 py-1 bg-figma-blueLight text-figma-blue text-xs rounded-full">support</span>
-                <button className="w-6 h-6 bg-figma-grayLight text-figma-gray rounded-full flex items-center justify-center text-sm">+</button>
-                <button className="text-figma-blue text-sm hover:underline">+ Add a tag</button>
+                {/* Job History Item 2 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium text-figma-dark">Installation #INST-2023-045</span>
+                        <span className="text-xs bg-figma-blue text-figma-white px-2 py-1 rounded">In Progress</span>
+                      </div>
+                      <div className="text-sm text-figma-gray mb-2">New Water Heater Installation</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 18, 2023</div>
+                      <div className="text-sm text-figma-gray">Technician: Sarah Wilson</div>
+                      <div className="text-sm text-figma-gray">Estimated Duration: 4h</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <DocumentArrowDownIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Job History Item 3 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium text-figma-dark">Maintenance #MAINT-2023-089</span>
+                        <span className="text-xs bg-figma-gray text-figma-white px-2 py-1 rounded">Scheduled</span>
+                      </div>
+                      <div className="text-sm text-figma-gray mb-2">Quarterly HVAC Maintenance</div>
+                      <div className="text-sm text-figma-gray">Date: Jan 5, 2024</div>
+                      <div className="text-sm text-figma-gray">Technician: TBD</div>
+                      <div className="text-sm text-figma-gray">Estimated Duration: 1h 30m</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <DocumentArrowDownIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Call Action Buttons */}
           <div className="flex justify-end gap-4">
@@ -471,25 +690,343 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   setShowCallModal(true)
                   setShowMakeCallPopup(false)
                 }}
-                className="w-16 h-16 bg-figma-green rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-16 h-16 bg-figma-green rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
               >
                 <UserCircleIcon className="h-8 w-8 text-figma-white" />
               </button>
               <span className="text-xs text-figma-gray">Call Modal</span>
             </div>
 
-            {/* Make a Call Button */}
+            {/* View Customer Details Button */}
             <div className="flex flex-col items-center gap-2">
               <button 
                 onClick={() => {
                   setShowMakeCallPopup(false)
                   setShowActive(true)
                 }}
-                className="w-16 h-16 bg-figma-blue rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
+                className="w-16 h-16 bg-figma-green rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
               >
-                <PhoneIcon className="h-8 w-8 text-figma-white" />
+                <EyeIcon className="h-8 w-8 text-figma-white" />
               </button>
-              <span className="text-xs text-figma-gray">Make a call</span>
+              <span className="text-xs text-figma-gray">View Details</span>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Make a Call Modal */}
+      <Modal
+        isOpen={showMakeCallModal}
+        onClose={() => setShowMakeCallModal(false)}
+        title=""
+        width="w-[500px]"
+        position="right"
+      >
+        <div className="space-y-6">
+          {/* Customer Name */}
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-figma-dark">Make a Call</h2>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex border-b border-gray-200">
+            <button 
+              onClick={() => setMakeCallModalTab('customer-info')}
+              className={`px-4 py-2 font-medium transition-colors flex items-center gap-2 ${
+                makeCallModalTab === 'customer-info' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg' 
+                  : 'text-figma-gray'
+              }`}
+            >
+              <UserCircleIcon className="h-4 w-4" />
+              Customer Information
+            </button>
+            <button 
+              onClick={() => setMakeCallModalTab('call-history')}
+              className={`px-4 py-2 font-medium transition-colors flex items-center gap-2 ${
+                makeCallModalTab === 'call-history' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg' 
+                  : 'text-figma-gray'
+              }`}
+            >
+              <PhoneIcon className="h-4 w-4" />
+              Call History
+            </button>
+            <button 
+              onClick={() => setMakeCallModalTab('job-history')}
+              className={`px-4 py-2 font-medium transition-colors flex items-center gap-2 ${
+                makeCallModalTab === 'job-history' 
+                  ? 'bg-gradient-to-r from-figma-blue to-figma-green text-figma-white rounded-t-lg' 
+                  : 'text-figma-gray'
+              }`}
+            >
+              <DocumentArrowDownIcon className="h-4 w-4" />
+              Job History
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          {makeCallModalTab === 'customer-info' && (
+            <div className="space-y-4">
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Phone</div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-figma-dark">(123) 456 7890</span>
+                    <span className="text-xs bg-figma-blueLight text-figma-blue px-2 py-1 rounded">Work</span>
+                    <button 
+                      onClick={() => handleMakeCall('(123) 456 7890')}
+                      className="ml-auto p-2 text-figma-blue rounded"
+                    >
+                      <PhoneIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-figma-dark">(123) 456 7890</span>
+                    <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Internal</span>
+                    <button 
+                      onClick={() => handleMakeCall('(123) 456 7890')}
+                      className="ml-auto p-2 text-figma-blue rounded"
+                    >
+                      <PhoneIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Address</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-figma-dark">123 Address st. City, Country 122345</span>
+                  <span className="text-xs bg-figma-grayLight text-figma-gray px-2 py-1 rounded">Home</span>
+                </div>
+              </div>
+
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Email</div>
+                <span className="text-figma-dark">yourmail@mail.com</span>
+              </div>
+
+              <div>
+                <div className="block text-sm font-medium text-figma-gray mb-1">Customer tags</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">sales</span>
+                  <span className="px-3 py-1 bg-figma-blueLight text-figma-blue text-xs rounded-full">support</span>
+                  <button className="w-6 h-6 bg-figma-grayLight text-figma-gray rounded-full flex items-center justify-center text-sm">+</button>
+                  <button className="text-figma-blue text-sm">+ Add a tag</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {makeCallModalTab === 'call-history' && (
+            <div className="space-y-4">
+              <div className="text-center text-figma-gray mb-4">
+                <CalendarIcon className="h-12 w-12 mx-auto mb-2" />
+                <p>Call History for John Doe</p>
+              </div>
+              
+              <div className="space-y-3">
+                {/* Call History Item 1 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PhoneIcon className="h-4 w-4 text-figma-blue" />
+                        <span className="font-medium text-figma-dark">Outbound Call</span>
+                        <span className="text-xs bg-figma-green text-figma-white px-2 py-1 rounded">Completed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray">Duration: 5m 32s</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 15, 2023 at 2:30 PM</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleMakeCall('+1 (555) 123-4567')}
+                        className="p-2 text-figma-blue rounded"
+                      >
+                        <PhoneIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call History Item 2 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PhoneIcon className="h-4 w-4 text-figma-blue" />
+                        <span className="font-medium text-figma-dark">Inbound Call</span>
+                        <span className="text-xs bg-figma-gray text-figma-white px-2 py-1 rounded">Missed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray">Duration: 0s</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 14, 2023 at 10:15 AM</div>
+                      <div className="text-sm text-figma-blue mt-1">📞 Has Voicemail</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleMakeCall('+1 (555) 987-6543')}
+                        className="p-2 text-figma-blue rounded"
+                      >
+                        <PhoneIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call History Item 3 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PhoneIcon className="h-4 w-4 text-figma-blue" />
+                        <span className="font-medium text-figma-dark">Outbound Call</span>
+                        <span className="text-xs bg-figma-green text-figma-white px-2 py-1 rounded">Completed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray">Duration: 12m 45s</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 13, 2023 at 4:20 PM</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleMakeCall('+1 (555) 456-7890')}
+                        className="p-2 text-figma-blue rounded"
+                      >
+                        <PhoneIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {makeCallModalTab === 'job-history' && (
+            <div className="space-y-4">
+              <div className="text-center text-figma-gray mb-4">
+                <DocumentArrowDownIcon className="h-12 w-12 mx-auto mb-2" />
+                <p>Job History for John Doe</p>
+              </div>
+              
+              <div className="space-y-3">
+                {/* Job History Item 1 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium text-figma-dark">Service Call #SC-2023-001</span>
+                        <span className="text-xs bg-figma-green text-figma-white px-2 py-1 rounded">Completed</span>
+                      </div>
+                      <div className="text-sm text-figma-gray mb-2">HVAC System Repair</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 10, 2023</div>
+                      <div className="text-sm text-figma-gray">Technician: Mike Johnson</div>
+                      <div className="text-sm text-figma-gray">Duration: 2h 30m</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <DocumentArrowDownIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Job History Item 2 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium text-figma-dark">Installation #INST-2023-045</span>
+                        <span className="text-xs bg-figma-blue text-figma-white px-2 py-1 rounded">In Progress</span>
+                      </div>
+                      <div className="text-sm text-figma-gray mb-2">New Water Heater Installation</div>
+                      <div className="text-sm text-figma-gray">Date: Dec 18, 2023</div>
+                      <div className="text-sm text-figma-gray">Technician: Sarah Wilson</div>
+                      <div className="text-sm text-figma-gray">Estimated Duration: 4h</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <DocumentArrowDownIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Job History Item 3 */}
+                <div className="border border-gray-200 rounded-lg p-4 transition-colors">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-medium text-figma-dark">Maintenance #MAINT-2023-089</span>
+                        <span className="text-xs bg-figma-gray text-figma-white px-2 py-1 rounded">Scheduled</span>
+                      </div>
+                      <div className="text-sm text-figma-gray mb-2">Quarterly HVAC Maintenance</div>
+                      <div className="text-sm text-figma-gray">Date: Jan 5, 2024</div>
+                      <div className="text-sm text-figma-gray">Technician: TBD</div>
+                      <div className="text-sm text-figma-gray">Estimated Duration: 1h 30m</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button className="p-2 text-figma-blue rounded">
+                        <EyeIcon className="h-4 w-4" />
+                      </button>
+                      <button className="p-2 text-figma-gray rounded">
+                        <DocumentArrowDownIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Call Action Buttons */}
+          <div className="flex justify-end gap-4">
+            {/* Call Modal Button */}
+            <div className="flex flex-col items-center gap-2">
+              <button 
+                onClick={() => {
+                  const mockCall: CallRecord = {
+                    id: Date.now().toString(),
+                    date: new Date().toISOString(),
+                    fromNumber: '+1 (555) 123-4567',
+                    contactName: 'John Doe',
+                    hasVoicemail: false,
+                    direction: 'outbound',
+                    status: 'active'
+                  }
+                  setSelectedCall(mockCall)
+                  setShowCallModal(true)
+                  setShowMakeCallModal(false)
+                }}
+                className="w-16 h-16 bg-figma-green rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
+              >
+                <UserCircleIcon className="h-8 w-8 text-figma-white" />
+              </button>
+              <span className="text-xs text-figma-gray">Call Modal</span>
+            </div>
+
+            {/* Close Button */}
+            <div className="flex flex-col items-center gap-2">
+              <button 
+                onClick={() => setShowMakeCallModal(false)}
+                className="w-16 h-16 bg-figma-gray rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
+              >
+                <CheckIcon className="h-8 w-8 text-figma-white" />
+              </button>
+              <span className="text-xs text-figma-gray">Close</span>
             </div>
           </div>
         </div>
@@ -661,7 +1198,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
 
             {/* Control Buttons */}
             <div className="flex items-center justify-center gap-4">
-              <button className="p-2 text-figma-gray hover:text-figma-dark">
+                    <button className="p-2 text-figma-gray">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zM6.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
                 </svg>
@@ -669,7 +1206,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
               
               <button 
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="w-12 h-12 bg-figma-blue rounded-full flex items-center justify-center text-figma-white hover:bg-figma-blue/90 transition-colors"
+                    className="w-12 h-12 bg-figma-blue rounded-full flex items-center justify-center text-figma-white transition-colors"
               >
                 {isPlaying ? (
                   <PauseIcon className="h-6 w-6" />
@@ -678,7 +1215,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                 )}
               </button>
               
-              <button className="p-2 text-figma-gray hover:text-figma-dark">
+                    <button className="p-2 text-figma-gray">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414zM14.293 4.293a1 1 0 00-1.414 0l-5 5a1 1 0 000 1.414l5 5a1 1 0 001.414-1.414L11.414 10l4.293-4.293a1 1 0 000-1.414z" clipRule="evenodd" />
                 </svg>
@@ -721,43 +1258,49 @@ function StatCard({
   readonly color?: 'blue' | 'green' | 'default'
   readonly size?: 'small' | 'normal'
 }) {
-  const isActive = color === 'green';
-  const isBlue = color === 'blue';
-  const isSmall = size === 'small';
-
-  // Text colors
-  const valueColorClass = isBlue ? 'text-figma-blue' : isActive ? 'text-figma-white' : 'text-figma-dark';
-  const labelColorClass = isActive ? 'text-figma-white' : 'text-figma-gray';
-
-  // Card background: white normally, green when active
-  const cardBgClass = isActive ? 'bg-[#7DBD4C]' : 'bg-figma-white';
-
-  // Card size
-  const baseCardClasses = isSmall
-    ? `rounded-lg p-2 min-h-[120px] w-36 flex flex-col justify-center`
-    : `rounded-lg p-3 min-h-[100px] w-36 flex flex-col justify-center`;
-
-  // Border color
-  const borderClass = isBlue ? 'border-figma-blue' : isActive ? 'bg-[#7DBD4C]' : 'border-gray-200';
-
+  const isActive = color === 'green'
+  const isBlue = color === 'blue'
+  const isSmall = size === 'small'
+  
+  const cardBgClass = isActive ? 'bg-figma-green' : 'border-gray-200'
+  
+  let valueColorClass = 'text-figma-dark';
+  if (isBlue) {
+    valueColorClass = 'text-figma-blue';
+  } else if (isActive) {
+    valueColorClass = 'text-figma-white';
+  }
+  
+  const labelColorClass = isActive ? 'text-figma-white' : 'text-figma-gray'
+  
+  const cardClasses = isSmall 
+    ? `bg-figma-white rounded-lg p-2 shadow-soft border ${cardBgClass} min-h-[120px] w-24 flex flex-col justify-center`
+    : `bg-figma-white rounded-lg p-3 shadow-soft border ${cardBgClass} min-h-[100px] flex flex-col justify-center input-success`
+  
+  const valueClasses = isSmall 
+    ? `text-3xl font-bold mb-1 ${valueColorClass}`
+    : `text-3xl font-bold mb-2 ${valueColorClass}`
+  
+  const labelClasses = isSmall 
+    ? `text-xs ${labelColorClass} text-center`
+    : `text-xs ${labelColorClass}`
+  
   return (
-    <div className={`${baseCardClasses} ${cardBgClass} border-2 ${borderClass} shadow-soft`}>
-      <div className={isSmall ? `text-3xl font-bold mb-1 ${valueColorClass}` : `text-3xl font-bold mb-2 ${valueColorClass}`}>
+    <div className={cardClasses}>
+      <div className={valueClasses}>
         {value}
       </div>
-      <div className={isSmall ? `text-sm ${labelColorClass}` : `text-sm ${labelColorClass}`}>
+      <div className={labelClasses}>
         {label}
       </div>
     </div>
   )
 }
 
-
-
 function Th({ children }: { readonly children: React.ReactNode }) {
-  return <th className="text-left px-4 py-4 font-semibold text-figma-gray text-sm">{children}</th>
+  return <th className="text-left px-6 py-4 font-semibold text-figma-gray text-sm">{children}</th>
 }
 
 function Td({ children, className }: { readonly children: React.ReactNode; readonly className?: string }) {
-  return <td className={`px-4 py-4 ${className ?? ''}`}>{children}</td>
+  return <td className={`px-6 py-4 ${className ?? ''}`}>{children}</td>
 }

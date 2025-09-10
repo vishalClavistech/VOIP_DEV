@@ -11,6 +11,7 @@ type Props = {
   readonly onSave?: () => void
   readonly saveButtonText?: string
   readonly width?: string
+  readonly position?: 'center' | 'right'
 }
 
 export function Modal({ 
@@ -21,12 +22,13 @@ export function Modal({
   showSaveButton = false, 
   onSave, 
   saveButtonText = "Save",
-  width = "w-96"
+  width = "w-96",
+  position = "center"
 }: Props) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-end z-50">
+    <div className={`fixed inset-0 bg-black/50 flex items-center ${position === 'right' ? 'justify-end' : 'justify-center'} z-50`}>
       <div className={`bg-figma-white rounded-lg shadow-lg ${width} max-h-[90vh] overflow-y-auto`}>
         {/* Header */}
         <div className="flex items-center justify-between p-3 border-b border-gray-200">
