@@ -28,10 +28,12 @@ The VoIP Dashboard is a modern call center interface built with:
 
 ### Key Features
 - **Global Navigation System**
-  - DaisyUI drawer component for sidebar navigation
+  - Custom slide-in/slide-out sidebar navigation
+  - Hidden by default, slides in on menu button click
   - Menu button in header for sidebar toggle
   - Company dropdown with multi-company support
-  - Responsive design (drawer on all screen sizes)
+  - Responsive design with overlay on all screen sizes
+  - Click outside to close functionality
 - **Call Management**
   - Real-time call statistics dashboard
   - Searchable call logs with filtering
@@ -632,14 +634,13 @@ export function useSidebar() {
 4. **Memoization**: Context value memoized for performance
 5. **Provider Rendering**: Context provided to all children
 
-### GlobalSidebar Component - Drawer Implementation
+### GlobalSidebar Component - Custom Slide Implementation
 
-#### GlobalSidebar.tsx - Sidebar Drawer
+#### GlobalSidebar.tsx - Custom Slide-In/Out Sidebar
 ```typescript
 // src/components/GlobalSidebar.tsx
 "use client"
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
   XMarkIcon,
@@ -658,16 +659,6 @@ interface GlobalSidebarProps {
 }
 
 export function GlobalSidebar({ isOpen, onClose }: GlobalSidebarProps) {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
-
   const navigationItems = [
     { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
@@ -710,11 +701,12 @@ export function GlobalSidebar({ isOpen, onClose }: GlobalSidebarProps) {
 ```
 
 **Execution Flow**:
-1. **Mount Check**: Ensures component is mounted before rendering
-2. **Overlay Rendering**: Dark backdrop when sidebar is open
-3. **Sidebar Positioning**: Fixed position with transform animations
-4. **Navigation Items**: Dynamic list of navigation options
-5. **Accessibility**: Keyboard navigation and ARIA labels
+1. **Conditional Overlay**: Dark backdrop only appears when `isOpen` is true
+2. **Transform Animation**: Sidebar slides in/out using `translate-x-0` / `-translate-x-full`
+3. **Click Outside to Close**: Overlay click triggers `onClose()`
+4. **Navigation Auto-Close**: Each navigation link closes sidebar on click
+5. **Accessibility**: Proper ARIA labels and keyboard support
+6. **Smooth Transitions**: 300ms ease-in-out animation for professional feel
 
 ### CompanyDropdown Component - Company Selection
 
@@ -799,7 +791,7 @@ export function CompanyDropdown({ companies, selectedCompany, onCompanyChange }:
 
 #### Custom Components → DaisyUI Components
 ```
-GlobalSidebar → drawer + drawer-side + menu
+GlobalSidebar → custom slide-in/out + overlay + menu
 GlobalHeader → navbar + navbar-start + navbar-end
 CompanyDropdown → dropdown + dropdown-content
 CallCenter Tabs → tabs + tab + tab-bordered
