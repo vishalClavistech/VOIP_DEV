@@ -10,6 +10,13 @@ export function VoipSettings() {
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  
+  // Toggle states
+  const [isEnabled, setIsEnabled] = useState(true)
+  const [markFieldsRequired, setMarkFieldsRequired] = useState(true)
+  const [autoFeedData, setAutoFeedData] = useState(true)
+  const [useAddressValidation, setUseAddressValidation] = useState(true)
+  
   const [dataFields, setDataFields] = useState([
     { id: 1, name: 'first_name', checked: true },
     { id: 2, name: 'last_name', checked: false },
@@ -115,12 +122,28 @@ export function VoipSettings() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="relative">
-                        <input type="checkbox" className="sr-only toggle" defaultChecked />
-                        <div className="w-10 h-6 bg-figma-green rounded-full relative cursor-pointer">
-                          <div className="absolute right-1 top-1 w-4 h-4 bg-figma-white rounded-full transition-transform"></div>
+                        <input 
+                          type="checkbox" 
+                          className="sr-only toggle" 
+                          checked={isEnabled}
+                          onChange={() => setIsEnabled(!isEnabled)}
+                        />
+                        <div 
+                          onClick={() => setIsEnabled(!isEnabled)}
+                          className={`w-10 h-6 rounded-full relative cursor-pointer transition-colors ${
+                            isEnabled ? 'bg-figma-green' : 'bg-figma-grayLight'
+                          }`}
+                        >
+                          <div className={`absolute top-1 w-4 h-4 bg-figma-white rounded-full transition-transform ${
+                            isEnabled ? 'right-1' : 'left-1'
+                          }`}></div>
                         </div>
                       </div>
-                      <span className="text-xs text-figma-green font-medium">ON</span>
+                      <span className={`text-xs font-medium ${
+                        isEnabled ? 'text-figma-green' : 'text-figma-gray'
+                      }`}>
+                        {isEnabled ? 'ON' : 'OFF'}
+                      </span>
                       <button className="text-figma-gray hover:text-figma-dark">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
