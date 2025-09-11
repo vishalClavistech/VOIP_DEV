@@ -16,10 +16,9 @@ export function GlobalLayout({ children }: GlobalLayoutProps) {
   const { isOpen, toggleSidebar, closeSidebar } = useSidebar()
   const { hasIncomingCall } = useIncomingCall()
 
-  // Determine if we should show the global header and sidebar
-  // For the home page, we'll use its own header, but still show sidebar
-  const isHomePage = pathname === '/'
-  const showGlobalHeader = !isHomePage
+  // Show global header and sidebar on all pages except home landing page
+  const isHomeLandingPage = pathname === '/home'
+  const showGlobalHeader = !isHomeLandingPage
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -28,7 +27,7 @@ export function GlobalLayout({ children }: GlobalLayoutProps) {
       
       {/* Main Content Area */}
       <div>
-        {/* Global Header - only show on non-home pages */}
+        {/* Global Header - show on all pages except home landing */}
         {showGlobalHeader && (
           <GlobalHeader 
             onMenuClick={toggleSidebar} 
