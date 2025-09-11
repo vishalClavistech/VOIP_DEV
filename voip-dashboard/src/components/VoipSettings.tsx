@@ -115,7 +115,7 @@ export function VoipSettings() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="relative">
-                        <input type="checkbox" className="sr-only" defaultChecked />
+                        <input type="checkbox" className="sr-only toggle" defaultChecked />
                         <div className="w-10 h-6 bg-figma-green rounded-full relative cursor-pointer">
                           <div className="absolute right-1 top-1 w-4 h-4 bg-figma-white rounded-full transition-transform"></div>
                         </div>
@@ -262,14 +262,7 @@ export function VoipSettings() {
         <div className="w-[36.4%] bg-figma-white rounded-lg p-6 shadow-soft">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold text-figma-dark">Add data parse rule</h3>
-            <button 
-              onClick={() => setShowDataParseRules(false)}
-              className="text-figma-gray hover:text-figma-dark"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            
           </div>
 
           {/* Rule Settings */}
