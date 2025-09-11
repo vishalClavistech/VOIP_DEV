@@ -8,7 +8,8 @@ const nextConfig = {
   basePath: '/voip',
   reactStrictMode: true,
   experimental: {
-    instrumentationHook: false
+    instrumentationHook: false,
+    turbo: false, 
   }
 }
 

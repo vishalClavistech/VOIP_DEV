@@ -43,6 +43,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
   // Modal states
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false)
   const [showConversationModal, setShowConversationModal] = useState(false)
+  const [showSummaryModal, setShowSummaryModal] = useState(false)
   const [showTeamNotesModal, setShowTeamNotesModal] = useState(false)
   const [showParsedDataModal, setShowParsedDataModal] = useState(false)
   const [showAudioModal, setShowAudioModal] = useState(false)
@@ -238,7 +239,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
               <table className="table table-zebra w-full">
                 <thead className="bg-gray-50">
                 <tr>
-                    <Th><CheckIcon className="h-4 w-4" /></Th>
+                  <Th><CheckIcon className="h-4 w-4" /></Th>
                   <Th>Date</Th>
                   <Th>From number</Th>
                   <Th>Contact name</Th>
@@ -308,7 +309,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                         <button 
                           onClick={() => {
                             setSelectedCall(row)
-                            setShowConversationModal(true)
+                            setShowSummaryModal(true)
                           }}
                           className="text-figma-blue text-sm flex items-center gap-1"
                         >
@@ -1081,7 +1082,20 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
           </div>
         </div>
       </Modal>
-
+      {/* Summary Modal */}
+      <Modal
+        isOpen={showSummaryModal}
+        onClose={() => setShowSummaryModal(false)}
+        title="Summary"
+        width="w-4/5 max-w-4xl"
+      >
+        <div className="space-y-4">
+          <div className="bg-figma-grayLight p-4 rounded-lg">
+            <div className="font-semibold text-figma-gray mb-2">Summary</div>
+            <div className="text-figma-dark">Customer was very cooperative and understanding about the billing issue.</div>
+          </div>
+        </div>
+      </Modal>
       {/* Team Notes Modal */}
       <Modal
         isOpen={showTeamNotesModal}
