@@ -19,10 +19,10 @@ interface GlobalSidebarProps {
 
 export function GlobalSidebar({ isOpen, onClose }: GlobalSidebarProps) {
   const navigationItems = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Dashboard', href: '/dashboard', icon: ChartBarIcon },
+    { name: 'Home', href: '/home', icon: HomeIcon },
+    { name: 'Dashboard', href: '/', icon: ChartBarIcon },
     { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
-    { name: 'Call Center', href: '/dashboard', icon: PhoneIcon },
+    { name: 'Call Center', href: '/', icon: PhoneIcon },
     { name: 'Team', href: '#', icon: UserGroupIcon },
     { name: 'Reports', href: '#', icon: DocumentTextIcon },
     { name: 'Notifications', href: '#', icon: BellIcon },
