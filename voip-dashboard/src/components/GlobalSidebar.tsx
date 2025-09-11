@@ -19,7 +19,7 @@ interface GlobalSidebarProps {
 
 export function GlobalSidebar({ isOpen, onClose }: GlobalSidebarProps) {
   const navigationItems = [
-    { name: 'Home', href: '/home', icon: HomeIcon },
+    { name: 'Home', href: '/', icon: HomeIcon },
     { name: 'Dashboard', href: '/', icon: ChartBarIcon },
     { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
     { name: 'Call Center', href: '/', icon: PhoneIcon },
