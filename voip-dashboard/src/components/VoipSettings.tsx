@@ -8,6 +8,7 @@ export function VoipSettings() {
   const [showDataParseRules, setShowDataParseRules] = useState(true)
   const [showAddEntryModal, setShowAddEntryModal] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   
@@ -16,6 +17,22 @@ export function VoipSettings() {
   const [markFieldsRequired, setMarkFieldsRequired] = useState(true)
   const [autoFeedData, setAutoFeedData] = useState(true)
   const [useAddressValidation, setUseAddressValidation] = useState(true)
+  
+  // Routing table data
+  const [routingEntries, setRoutingEntries] = useState([
+    { id: 1, enabled: true, name: 'Brian Scruggs', email: 'brian@zyratalk.com', phone: '', type: 'desktop', ringTime: 30 },
+    { id: 2, enabled: false, name: '1 (623) 986-5286', email: 'Primary Forward Number', phone: '1 (623) 986-5286', type: 'mobile', ringTime: 30 }
+  ])
+  
+  // Edit modal state
+  const [editingEntry, setEditingEntry] = useState<typeof routingEntries[0] | null>(null)
+  const [editFormData, setEditFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    ringTime: 30,
+    enabled: false
+  })
   
   const [dataFields, setDataFields] = useState([
     { id: 1, name: 'first_name', checked: true },
@@ -100,158 +117,126 @@ export function VoipSettings() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {/* Row 1 - Brian Scruggs */}
-                <tr>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-figma-dark">1</span>
-                      <div className="flex flex-col">
+                {routingEntries.map((entry, index) => (
+                  <tr key={entry.id}>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-figma-dark">{index + 1}</span>
+                        <div className="flex flex-col">
+                          <button className="text-figma-gray hover:text-figma-dark">
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                            </svg>
+                          </button>
+                          <button className="text-figma-gray hover:text-figma-dark">
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="relative">
+                          <input 
+                            type="checkbox" 
+                            className="sr-only toggle" 
+                            checked={entry.enabled}
+                            onChange={() => {
+                              const newEntries = [...routingEntries]
+                              newEntries[index].enabled = !newEntries[index].enabled
+                              setRoutingEntries(newEntries)
+                            }}
+                          />
+                          <div 
+                            onClick={() => {
+                              const newEntries = [...routingEntries]
+                              newEntries[index].enabled = !newEntries[index].enabled
+                              setRoutingEntries(newEntries)
+                            }}
+                            className={`w-10 h-6 rounded-full relative cursor-pointer transition-colors ${
+                              entry.enabled ? 'bg-figma-green' : 'bg-gray-300'
+                            }`}
+                          >
+                            <div className={`absolute top-1 w-4 h-4 bg-figma-white rounded-full transition-transform ${
+                              entry.enabled ? 'right-1' : 'left-1'
+                            }`}></div>
+                          </div>
+                        </div>
+                        <span className={`text-xs font-medium ${
+                          entry.enabled ? 'text-figma-green' : 'text-figma-gray'
+                        }`}>
+                          {entry.enabled ? 'ON' : 'OFF'}
+                        </span>
                         <button className="text-figma-gray hover:text-figma-dark">
                           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                          </svg>
-                        </button>
-                        <button className="text-figma-gray hover:text-figma-dark">
-                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
                         </button>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <input 
-                          type="checkbox" 
-                          className="sr-only toggle" 
-                          checked={isEnabled}
-                          onChange={() => setIsEnabled(!isEnabled)}
-                        />
-                        <div 
-                          onClick={() => setIsEnabled(!isEnabled)}
-                          className={`w-10 h-6 rounded-full relative cursor-pointer transition-colors ${
-                            isEnabled ? 'bg-figma-green' : 'bg-figma-grayLight'
-                          }`}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <svg className="h-4 w-4 text-figma-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <span className="text-sm text-figma-dark">{entry.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-sm text-figma-blue hover:underline cursor-pointer">{entry.email}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-figma-dark">{entry.ringTime}</span>
+                        <button 
+                          onClick={() => {
+                            const newEntries = routingEntries.filter(e => e.id !== entry.id)
+                            setRoutingEntries(newEntries)
+                          }}
+                          className="text-figma-red hover:text-red-600"
                         >
-                          <div className={`absolute top-1 w-4 h-4 bg-figma-white rounded-full transition-transform ${
-                            isEnabled ? 'right-1' : 'left-1'
-                          }`}></div>
-                        </div>
-                      </div>
-                      <span className={`text-xs font-medium ${
-                        isEnabled ? 'text-figma-green' : 'text-figma-gray'
-                      }`}>
-                        {isEnabled ? 'ON' : 'OFF'}
-                      </span>
-                      <button className="text-figma-gray hover:text-figma-dark">
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <svg className="h-4 w-4 text-figma-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      <span className="text-sm text-figma-dark">Brian Scruggs</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-sm text-figma-blue hover:underline cursor-pointer">brian@zyratalk.com</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-figma-dark">30</span>
-                      <button className="text-figma-red hover:text-red-600">
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button className="text-figma-blue hover:underline text-sm">Edit</button>
-                  </td>
-                </tr>
-
-                {/* Row 2 - Primary Forward Number */}
-                <tr>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-figma-dark">2</span>
-                      <div className="flex flex-col">
-                        <button className="text-figma-gray hover:text-figma-dark">
                           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                          </svg>
-                        </button>
-                        <button className="text-figma-gray hover:text-figma-dark">
-                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <input type="checkbox" className="sr-only" />
-                        <div className="w-10 h-6 bg-gray-300 rounded-full relative cursor-pointer">
-                          <div className="absolute left-1 top-1 w-4 h-4 bg-figma-white rounded-full transition-transform"></div>
-                        </div>
-                      </div>
-                      <span className="text-xs text-figma-gray font-medium">OFF</span>
-                      <button className="text-figma-gray hover:text-figma-dark">
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
+                    </td>
+                    <td className="px-4 py-3">
+                      <button 
+                        onClick={() => {
+                          setEditingEntry(entry)
+                          setEditFormData({
+                            name: entry.name,
+                            email: entry.email,
+                            phone: entry.phone,
+                            ringTime: entry.ringTime,
+                            enabled: entry.enabled
+                          })
+                          setShowEditModal(true)
+                        }}
+                        className="text-figma-blue hover:underline text-sm"
+                      >
+                        Edit
                       </button>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <svg className="h-4 w-4 text-figma-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span className="text-sm text-figma-dark">1 (623) 986-5286</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="text-sm text-figma-blue hover:underline cursor-pointer">Primary Forward Number</span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-figma-dark">30</span>
-                      <button className="text-figma-red hover:text-red-600">
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button className="text-figma-blue hover:underline text-sm">Edit</button>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
             
             {/* Add New Entry Button */}
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4 border-t border-gray-200 flex justify-end">
               <button 
                 onClick={() => setShowAddEntryModal(true)}
-                className="flex items-center gap-2 text-figma-green hover:text-figma-green/80 font-medium"
+                className="flex items-center gap-2 text-figma-green hover:text-figma-green/80 font-medium flex-row-reverse"
               >
                 <div className="w-6 h-6 bg-figma-green rounded-full flex items-center justify-center">
                   <svg className="h-4 w-4 text-figma-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
-                Add new entry
               </button>
             </div>
           </div>
@@ -291,12 +276,24 @@ export function VoipSettings() {
           {/* Rule Settings */}
           <div className="space-y-4 mb-6">
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="mark-fields-required" defaultChecked className="rounded border-gray-300" />
-              <label htmlFor="mark-fields-required" className="text-sm text-figma-dark">Mark fields required</label>
+              <input 
+                type="checkbox" 
+                id="mark-fields-required" 
+                checked={markFieldsRequired}
+                onChange={(e) => setMarkFieldsRequired(e.target.checked)}
+                className="rounded border-gray-300" 
+              />
+              <label htmlFor="mark-fields-required" className="text-sm text-figma-dark cursor-pointer">Mark fields required</label>
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="auto-feed-data" defaultChecked className="rounded border-gray-300" />
-              <label htmlFor="auto-feed-data" className="text-sm text-figma-dark">If all required fields are gathered, feed data automatically</label>
+              <input 
+                type="checkbox" 
+                id="auto-feed-data" 
+                checked={autoFeedData}
+                onChange={(e) => setAutoFeedData(e.target.checked)}
+                className="rounded border-gray-300" 
+              />
+              <label htmlFor="auto-feed-data" className="text-sm text-figma-dark cursor-pointer">If all required fields are gathered, feed data automatically</label>
             </div>
             <div className="flex items-center gap-2">
               <input type="checkbox" id="datetime-required" className="rounded border-gray-300" />
@@ -322,8 +319,14 @@ export function VoipSettings() {
           {/* Address Validation */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
-              <input type="radio" id="use-address-validation" defaultChecked className="text-figma-blue" />
-              <label htmlFor="use-address-validation" className="text-sm text-figma-dark">Use address validation</label>
+              <input 
+                type="radio" 
+                id="use-address-validation" 
+                checked={useAddressValidation}
+                onChange={(e) => setUseAddressValidation(e.target.checked)}
+                className="text-figma-blue" 
+              />
+              <label htmlFor="use-address-validation" className="text-sm text-figma-dark cursor-pointer">Use address validation</label>
             </div>
             <div className="ml-6">
               <div className="flex items-center gap-2 px-3 py-2 bg-figma-grayLight rounded-lg">
@@ -407,8 +410,9 @@ export function VoipSettings() {
         isOpen={showAddEntryModal} 
         onClose={() => setShowAddEntryModal(false)}
         title="Add New Entry"
+        width="w-full max-w-2xl"
       >
-        <div className="bg-figma-white rounded-lg p-6 w-full max-w-2xl">
+        <div className="w-full">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-figma-dark">Add New Entry</h3>
             <button 
@@ -495,8 +499,9 @@ export function VoipSettings() {
         isOpen={showUploadModal} 
         onClose={() => setShowUploadModal(false)}
         title="Upload Audio File"
+        width="w-full max-w-2xl"
       >
-        <div className="bg-figma-white rounded-lg p-6 w-full max-w-2xl">
+        <div className="w-full">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-figma-dark">Upload Audio File</h3>
             <button 
@@ -622,6 +627,300 @@ export function VoipSettings() {
                 className="px-4 py-2 bg-figma-green text-figma-white rounded-lg font-medium hover:bg-figma-green/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Save Audio
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Edit Entry Modal */}
+      <Modal 
+        isOpen={showEditModal} 
+        onClose={() => setShowEditModal(false)}
+        title=""
+        width="w-full max-w-6xl"
+      >
+        <div className="w-full">
+          {/* Modal Header */}
+          <div className="p-6">
+            {/* Entry Type Selection */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-figma-dark mb-4">Entry Type</h4>
+              <div className="flex bg-figma-grayLight rounded-lg p-1 w-fit">
+                <button 
+                  onClick={() => {
+                    if (editingEntry) {
+                      setEditingEntry({ ...editingEntry, type: 'desktop' })
+                    }
+                  }}
+                  className={`px-6 py-3 rounded-md font-medium transition-colors ${
+                    editingEntry?.type === 'desktop' ? 'bg-figma-blue text-figma-white' : 'text-figma-gray hover:text-figma-dark'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Desktop User
+                  </div>
+                </button>
+                <button 
+                  onClick={() => {
+                    if (editingEntry) {
+                      setEditingEntry({ ...editingEntry, type: 'mobile' })
+                    }
+                  }}
+                  className={`px-6 py-3 rounded-md font-medium transition-colors ${
+                    editingEntry?.type === 'mobile' ? 'bg-figma-green text-figma-white' : 'text-figma-gray hover:text-figma-dark'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    Phone Number
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Entry Details */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-figma-dark mb-4">Entry Details</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <label htmlFor="edit-name" className="block text-sm font-medium text-figma-dark mb-2">
+                    {editingEntry?.type === 'desktop' ? 'User Name' : 'Phone Number'}
+                  </label>
+                  <input 
+                    type="text" 
+                    id="edit-name"
+                    value={editFormData.name}
+                    onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                    placeholder={editingEntry?.type === 'desktop' ? 'Enter user name' : 'Enter phone number'}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="edit-description" className="block text-sm font-medium text-figma-dark mb-2">
+                    {editingEntry?.type === 'desktop' ? 'Email Address' : 'Description'}
+                  </label>
+                  <input 
+                    type="text" 
+                    id="edit-description"
+                    value={editFormData.email}
+                    onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                    placeholder={editingEntry?.type === 'desktop' ? 'Enter email address' : 'Enter description'}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Ring Configuration */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-figma-dark mb-4">Ring Configuration</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div>
+                  <label htmlFor="edit-ring-time" className="block text-sm font-medium text-figma-dark mb-2">Ring Time (seconds)</label>
+                  <input 
+                    type="number" 
+                    id="edit-ring-time"
+                    value={editFormData.ringTime}
+                    onChange={(e) => setEditFormData({ ...editFormData, ringTime: parseInt(e.target.value) || 30 })}
+                    min="1"
+                    max="300"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-figma-dark mb-2">Status</label>
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <input 
+                        type="checkbox" 
+                        className="sr-only toggle" 
+                        checked={editFormData.enabled}
+                        onChange={(e) => setEditFormData({ ...editFormData, enabled: e.target.checked })}
+                      />
+                      <div 
+                        onClick={() => setEditFormData({ ...editFormData, enabled: !editFormData.enabled })}
+                        className={`w-12 h-6 rounded-full relative cursor-pointer transition-colors ${
+                          editFormData.enabled ? 'bg-figma-green' : 'bg-gray-300'
+                        }`}
+                      >
+                        <div className={`absolute top-1 w-4 h-4 bg-figma-white rounded-full transition-transform ${
+                          editFormData.enabled ? 'right-1' : 'left-1'
+                        }`}></div>
+                      </div>
+                    </div>
+                    <span className={`text-sm font-medium ${
+                      editFormData.enabled ? 'text-figma-green' : 'text-figma-gray'
+                    }`}>
+                      {editFormData.enabled ? 'Enabled' : 'Disabled'}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="edit-priority" className="block text-sm font-medium text-figma-dark mb-2">Priority</label>
+                  <select 
+                    id="edit-priority"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                  >
+                    <option>Normal</option>
+                    <option>High</option>
+                    <option>Low</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* No Answer Configuration */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-figma-dark mb-4">No Answer Configuration</h4>
+              <div className="space-y-6">
+                <div>
+                  <label htmlFor="edit-no-answer-action" className="block text-sm font-medium text-figma-dark mb-2">
+                    If no one answers, where should we send your callers?
+                  </label>
+                  <select 
+                    id="edit-no-answer-action"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                  >
+                    <option>Go to a Voicemail Box</option>
+                    <option>Hang up</option>
+                    <option>Forward to another number</option>
+                    <option>Trigger AI conversation</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="edit-voicemail-box" className="block text-sm font-medium text-figma-dark mb-2">
+                    Which Voicemail Box?
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <select 
+                      id="edit-voicemail-box"
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                    >
+                      <option>Default Mailbox</option>
+                      <option>Custom Mailbox 1</option>
+                      <option>Custom Mailbox 2</option>
+                    </select>
+                    <button className="px-4 py-3 bg-figma-grayLight text-figma-dark rounded-lg font-medium hover:bg-figma-grayLight/80 transition-colors flex items-center gap-2">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Add Voicemail Box
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Caller Experience */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-figma-dark mb-4">Caller Experience</h4>
+              <div className="space-y-6">
+                <div>
+                  <label htmlFor="edit-waiting-audio" className="block text-sm font-medium text-figma-dark mb-2">
+                    What should we play while your callers are waiting?
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <select 
+                      id="edit-waiting-audio"
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                    >
+                      <option>Ringing Tone</option>
+                      <option>Custom Music</option>
+                      <option>Silence</option>
+                      <option>Custom Message</option>
+                    </select>
+                    <button className="px-3 py-3 bg-orange-500 text-white rounded-l-lg hover:bg-orange-600 transition-colors">
+                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => setShowUploadModal(true)}
+                      className="px-3 py-3 bg-figma-grayLight text-figma-dark rounded-r-lg hover:bg-figma-grayLight/80 transition-colors"
+                    >
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Advanced Settings */}
+            <div className="mb-8">
+              <h4 className="text-lg font-semibold text-figma-dark mb-4">Advanced Settings</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <label htmlFor="edit-schedule" className="block text-sm font-medium text-figma-dark mb-2">Schedule</label>
+                  <div className="flex items-center gap-3 p-3 bg-figma-grayLight rounded-lg">
+                    <button className="text-figma-gray hover:text-figma-dark">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                    <span className="text-sm text-figma-dark font-medium">Always active</span>
+                    <button className="text-figma-gray hover:text-figma-dark ml-auto">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="edit-timezone" className="block text-sm font-medium text-figma-dark mb-2">Timezone</label>
+                  <select 
+                    id="edit-timezone"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-figma-blue focus:border-figma-blue"
+                  >
+                    <option>(UTC-5:00) Eastern Time</option>
+                    <option>(UTC-6:00) Central Time</option>
+                    <option>(UTC-7:00) Mountain Time</option>
+                    <option>(UTC-8:00) Pacific Time</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4 pt-6 border-t border-gray-200">
+              <button 
+                type="button"
+                onClick={() => setShowEditModal(false)}
+                className="px-6 py-3 text-figma-gray hover:text-figma-dark font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                onClick={() => {
+                  if (editingEntry) {
+                    const newEntries = routingEntries.map(entry => 
+                      entry.id === editingEntry.id 
+                        ? { 
+                            ...entry, 
+                            name: editFormData.name,
+                            email: editFormData.email,
+                            phone: editFormData.phone,
+                            ringTime: editFormData.ringTime,
+                            enabled: editFormData.enabled
+                          }
+                        : entry
+                    )
+                    setRoutingEntries(newEntries)
+                    setShowEditModal(false)
+                    setEditingEntry(null)
+                  }
+                }}
+                className="px-6 py-3 bg-figma-blue text-figma-white rounded-lg font-medium hover:bg-figma-blue/90 transition-colors"
+              >
+                Save Changes
               </button>
             </div>
           </div>
