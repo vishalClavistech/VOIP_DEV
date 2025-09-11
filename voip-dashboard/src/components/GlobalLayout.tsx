@@ -2,8 +2,10 @@
 
 import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/contexts/SidebarContext'
+import { useIncomingCall } from '@/contexts/TwilioContext'
 import { GlobalHeader } from './GlobalHeader'
 import { GlobalSidebar } from './GlobalSidebar'
+import { IncomingCallToast } from './incoming/IncomingCallToast'
 
 interface GlobalLayoutProps {
   readonly children: React.ReactNode
@@ -12,6 +14,7 @@ interface GlobalLayoutProps {
 export function GlobalLayout({ children }: GlobalLayoutProps) {
   const pathname = usePathname()
   const { isOpen, toggleSidebar, closeSidebar } = useSidebar()
+  const { hasIncomingCall } = useIncomingCall()
 
   // Show global header and sidebar on all pages except home landing page
   const isHomeLandingPage = pathname === '/home'
@@ -38,6 +41,11 @@ export function GlobalLayout({ children }: GlobalLayoutProps) {
           {children}
         </main>
       </div>
+      
+      {/* Incoming Call Toast */}
+      {hasIncomingCall && (
+        <IncomingCallToast onClose={() => {}} />
+      )}
     </div>
   )
 }

@@ -5,7 +5,7 @@ import { CallCenter } from '@/components/CallCenter'
 import { callsMock } from '@/lib/mock'
 import { CallRecord } from '@/lib/types'
 
-export default function DashboardPage() {
+export default function HomePage() {
   const [query, setQuery] = useState('')
   const [data] = useState<CallRecord[]>(callsMock)
 
