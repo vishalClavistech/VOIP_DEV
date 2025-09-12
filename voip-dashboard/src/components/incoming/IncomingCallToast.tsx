@@ -20,11 +20,11 @@ export function IncomingCallToast({ onClose }: Props) {
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <button className="bg-[#7DBD4C] text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors">
+          <button className="bg-[#7DBD4C] text-figma-white py-3 px-4 rounded-lg font-medium  transition-colors">
             Accept
           </button>
           <button 
-            className="bg-figma-red text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-red/90 transition-colors" 
+            className="bg-figma-red text-figma-white py-3 px-4 rounded-lg font-medium  transition-colors" 
             onClick={onClose}
           >
             Decline
@@ -32,7 +32,7 @@ export function IncomingCallToast({ onClose }: Props) {
         </div>
 
         {/* More Information Link */}
-        <button className="text-mainColor-500 hover:underline text-sm border-2 border-mainColor-500 rounded p-4" onClick={onClose}>
+        <button className="text-mainColor-500  text-sm border-2 border-mainColor-500 rounded p-4" onClick={onClose}>
           More Information
         </button>
       </div>

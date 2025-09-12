@@ -66,7 +66,7 @@ export function VoipSettings() {
             </div>
             <button 
               onClick={() => setShowUploadModal(true)}
-              className="px-4 py-3 bg-figma-green text-figma-white rounded-lg font-medium flex items-center gap-2 hover:bg-figma-green/90 transition-colors"
+              className="px-4 py-3 bg-figma-green text-figma-white rounded-lg font-medium flex items-center gap-2  transition-colors"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -86,7 +86,7 @@ export function VoipSettings() {
               <button 
                 onClick={() => setRoutingMode('sequence')}
                 className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                  routingMode === 'sequence' ? 'bg-figma-blue text-figma-white' : 'text-figma-gray hover:text-figma-dark'
+                  routingMode === 'sequence' ? 'bg-figma-blue text-figma-white' : 'text-figma-gray '
                 }`}
               >
                 Ring in sequence
@@ -94,7 +94,7 @@ export function VoipSettings() {
               <button 
                 onClick={() => setRoutingMode('all')}
                 className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                  routingMode === 'all' ? 'bg-figma-green text-figma-white' : 'text-figma-gray hover:text-figma-dark'
+                  routingMode === 'all' ? 'bg-figma-green text-figma-white' : 'text-figma-gray '
                 }`}
               >
                 Ring All
@@ -123,12 +123,12 @@ export function VoipSettings() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium text-figma-dark">{index + 1}</span>
                         <div className="flex flex-col">
-                          <button className="text-figma-gray hover:text-figma-dark">
+                          <button className="text-figma-gray ">
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                             </svg>
                           </button>
-                          <button className="text-figma-gray hover:text-figma-dark">
+                          <button className="text-figma-gray ">
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                             </svg>
@@ -169,7 +169,7 @@ export function VoipSettings() {
                         }`}>
                           {entry.enabled ? 'ON' : 'OFF'}
                         </span>
-                        <button className="text-figma-gray hover:text-figma-dark">
+                        <button className="text-figma-gray ">
                           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
@@ -185,7 +185,7 @@ export function VoipSettings() {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-sm text-figma-blue hover:underline cursor-pointer">{entry.email}</span>
+                      <span className="text-sm text-figma-blue  cursor-pointer">{entry.email}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
@@ -195,7 +195,7 @@ export function VoipSettings() {
                             const newEntries = routingEntries.filter(e => e.id !== entry.id)
                             setRoutingEntries(newEntries)
                           }}
-                          className="text-figma-red hover:text-red-600"
+                          className="text-figma-red "
                         >
                           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -216,7 +216,7 @@ export function VoipSettings() {
                           })
                           setShowEditModal(true)
                         }}
-                        className="text-figma-blue hover:underline text-sm"
+                        className="text-figma-blue  text-sm"
                       >
                         Edit
                       </button>
@@ -230,7 +230,7 @@ export function VoipSettings() {
             <div className="p-4 border-t border-gray-200 flex justify-end">
               <button 
                 onClick={() => setShowAddEntryModal(true)}
-                className="flex items-center gap-2 text-figma-green hover:text-figma-green/80 font-medium flex-row-reverse"
+                className="flex items-center gap-2 text-figma-green  font-medium flex-row-reverse"
               >
                 <div className="w-6 h-6 bg-figma-green rounded-full flex items-center justify-center">
                   <svg className="h-4 w-4 text-figma-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -307,7 +307,7 @@ export function VoipSettings() {
             <div className="ml-6">
               <div className="flex items-center gap-2 px-3 py-2 bg-figma-grayLight rounded-lg">
                 <span className="text-sm text-figma-dark">(UTC 4:00) Eastern Daylight EDT - New York</span>
-                <button className="text-figma-gray hover:text-figma-dark">
+                <button className="text-figma-gray ">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -331,7 +331,7 @@ export function VoipSettings() {
             <div className="ml-6">
               <div className="flex items-center gap-2 px-3 py-2 bg-figma-grayLight rounded-lg">
                 <span className="text-sm text-figma-dark">USA</span>
-                <button className="text-figma-gray hover:text-figma-dark">
+                <button className="text-figma-gray ">
                   <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -360,7 +360,7 @@ export function VoipSettings() {
                   const newId = Math.max(...dataFields.map(f => f.id)) + 1
                   setDataFields([...dataFields, { id: newId, name: 'new_field', checked: false }])
                 }}
-                className="text-figma-green hover:text-figma-green/80 text-sm font-medium"
+                className="text-figma-green  text-sm font-medium"
               >
                 + Add Field
               </button>
@@ -392,7 +392,7 @@ export function VoipSettings() {
                     onClick={() => {
                       setDataFields(dataFields.filter(f => f.id !== field.id))
                     }}
-                    className="text-figma-red hover:text-red-600"
+                    className="text-figma-red "
                   >
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -417,7 +417,7 @@ export function VoipSettings() {
             <h3 className="text-xl font-semibold text-figma-dark">Add New Entry</h3>
             <button 
               onClick={() => setShowAddEntryModal(false)}
-              className="text-figma-gray hover:text-figma-dark"
+              className="text-figma-gray "
             >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -479,13 +479,13 @@ export function VoipSettings() {
               <button 
                 type="button"
                 onClick={() => setShowAddEntryModal(false)}
-                className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium"
+                className="px-4 py-2 text-figma-gray  font-medium"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
-                className="px-4 py-2 bg-figma-blue text-figma-white rounded-lg font-medium hover:bg-figma-blue/90 transition-colors"
+                className="px-4 py-2 bg-figma-blue text-figma-white rounded-lg font-medium  transition-colors"
               >
                 Add Entry
               </button>
@@ -506,7 +506,7 @@ export function VoipSettings() {
             <h3 className="text-xl font-semibold text-figma-dark">Upload Audio File</h3>
             <button 
               onClick={() => setShowUploadModal(false)}
-              className="text-figma-gray hover:text-figma-dark"
+              className="text-figma-gray "
             >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -518,7 +518,7 @@ export function VoipSettings() {
             {/* Drag and Drop Area */}
             <button 
               type="button"
-              className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-figma-blue transition-colors cursor-pointer"
+              className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center  transition-colors cursor-pointer"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault()
@@ -591,7 +591,7 @@ export function VoipSettings() {
               <div className="bg-figma-grayLight rounded-lg p-4">
                 <h4 className="text-sm font-medium text-figma-dark mb-3">Audio Preview</h4>
                 <div className="flex items-center gap-4">
-                  <button className="w-10 h-10 bg-figma-blue text-figma-white rounded-full flex items-center justify-center hover:bg-figma-blue/90 transition-colors">
+                  <button className="w-10 h-10 bg-figma-blue text-figma-white rounded-full flex items-center justify-center  transition-colors">
                     <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
@@ -612,7 +612,7 @@ export function VoipSettings() {
             <div className="flex justify-end gap-3 pt-4">
               <button 
                 onClick={() => setShowUploadModal(false)}
-                className="px-4 py-2 text-figma-gray hover:text-figma-dark font-medium"
+                className="px-4 py-2 text-figma-gray  font-medium"
               >
                 Cancel
               </button>
@@ -624,7 +624,7 @@ export function VoipSettings() {
                   setUploadedFile(null)
                 }}
                 disabled={uploadProgress < 100}
-                className="px-4 py-2 bg-figma-green text-figma-white rounded-lg font-medium hover:bg-figma-green/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-figma-green text-figma-white rounded-lg font-medium  transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Save Audio
               </button>
@@ -654,7 +654,7 @@ export function VoipSettings() {
                     }
                   }}
                   className={`px-6 py-3 rounded-md font-medium transition-colors ${
-                    editingEntry?.type === 'desktop' ? 'bg-figma-blue text-figma-white' : 'text-figma-gray hover:text-figma-dark'
+                    editingEntry?.type === 'desktop' ? 'bg-figma-blue text-figma-white' : 'text-figma-gray '
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -671,7 +671,7 @@ export function VoipSettings() {
                     }
                   }}
                   className={`px-6 py-3 rounded-md font-medium transition-colors ${
-                    editingEntry?.type === 'mobile' ? 'bg-figma-green text-figma-white' : 'text-figma-gray hover:text-figma-dark'
+                    editingEntry?.type === 'mobile' ? 'bg-figma-green text-figma-white' : 'text-figma-gray '
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -806,7 +806,7 @@ export function VoipSettings() {
                       <option>Custom Mailbox 1</option>
                       <option>Custom Mailbox 2</option>
                     </select>
-                    <button className="px-4 py-3 bg-figma-grayLight text-figma-dark rounded-lg font-medium hover:bg-figma-grayLight/80 transition-colors flex items-center gap-2">
+                    <button className="px-4 py-3 bg-figma-grayLight text-figma-dark rounded-lg font-medium  transition-colors flex items-center gap-2">
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
@@ -835,14 +835,14 @@ export function VoipSettings() {
                       <option>Silence</option>
                       <option>Custom Message</option>
                     </select>
-                    <button className="px-3 py-3 bg-orange-500 text-white rounded-l-lg hover:bg-orange-600 transition-colors">
+                    <button className="px-3 py-3 bg-orange-500 text-white rounded-l-lg  transition-colors">
                       <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z"/>
                       </svg>
                     </button>
                     <button 
                       onClick={() => setShowUploadModal(true)}
-                      className="px-3 py-3 bg-figma-grayLight text-figma-dark rounded-r-lg hover:bg-figma-grayLight/80 transition-colors"
+                      className="px-3 py-3 bg-figma-grayLight text-figma-dark rounded-r-lg  transition-colors"
                     >
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -860,13 +860,13 @@ export function VoipSettings() {
                 <div>
                   <label htmlFor="edit-schedule" className="block text-sm font-medium text-figma-dark mb-2">Schedule</label>
                   <div className="flex items-center gap-3 p-3 bg-figma-grayLight rounded-lg">
-                    <button className="text-figma-gray hover:text-figma-dark">
+                    <button className="text-figma-gray ">
                       <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </button>
                     <span className="text-sm text-figma-dark font-medium">Always active</span>
-                    <button className="text-figma-gray hover:text-figma-dark ml-auto">
+                    <button className="text-figma-gray  ml-auto">
                       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -893,7 +893,7 @@ export function VoipSettings() {
               <button 
                 type="button"
                 onClick={() => setShowEditModal(false)}
-                className="px-6 py-3 text-figma-gray hover:text-figma-dark font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 text-figma-gray  font-medium border border-gray-300 rounded-lg  transition-colors"
               >
                 Cancel
               </button>
@@ -918,7 +918,7 @@ export function VoipSettings() {
                     setEditingEntry(null)
                   }
                 }}
-                className="px-6 py-3 bg-figma-blue text-figma-white rounded-lg font-medium hover:bg-figma-blue/90 transition-colors"
+                className="px-6 py-3 bg-figma-blue text-figma-white rounded-lg font-medium  transition-colors"
               >
                 Save Changes
               </button>

@@ -35,7 +35,7 @@ export function Modal({
           <h3 className="text-xl font-bold text-figma-dark">{title}</h3>
           <button 
             onClick={onClose}
-            className="p-2 text-figma-gray hover:text-figma-dark hover:bg-figma-grayLight rounded-lg transition-colors"
+            className="p-2 text-figma-gray   rounded-lg transition-colors"
           >
             <XMarkIcon className="h-5 w-5" />
           </button>
@@ -51,13 +51,13 @@ export function Modal({
           <div className="flex gap-3 p-6 border-t border-gray-200">
             <button 
               onClick={onSave}
-              className="flex-1 bg-figma-green text-sm text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors"
+              className="flex-1 bg-figma-green text-sm text-figma-white py-3 px-4 rounded-lg font-medium  transition-colors"
             >
               {saveButtonText}
             </button>
             <button 
               onClick={onClose}
-              className="flex-1 bg-figma-gray text-sm text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-gray/90 transition-colors"
+              className="flex-1 bg-figma-gray text-sm text-figma-white py-3 px-4 rounded-lg font-medium  transition-colors"
             >
               Close
             </button>

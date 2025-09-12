@@ -61,7 +61,7 @@ export default function SettingsPage() {
                 <div className="font-bold text-xl text-figma-dark">Zyra VoIP</div>
               </div>
               <nav className="hidden md:flex items-center gap-1 ml-8">
-                <a className="px-4 py-2 text-figma-gray hover:text-figma-blue hover:bg-figma-blueLight rounded-lg transition-all duration-200" href="/">Dashboard</a>
+                <a className="px-4 py-2 text-figma-gray   rounded-lg transition-all duration-200" href="/">Dashboard</a>
                 <a className="px-4 py-2 text-figma-blue bg-figma-blueLight rounded-lg font-medium" href="/settings"></a>
               </nav>
             </div>
@@ -126,7 +126,7 @@ export default function SettingsPage() {
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                     routingMode === 'sequence' 
                       ? 'bg-figma-blue text-white' 
-                      : 'border-2 border-figma-gray text-figma-gray hover:border-figma-blue hover:text-figma-blue'
+                      : 'border-2 border-figma-gray text-figma-gray  '
                   }`}
                 >
                   Ring in sequence
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
                     routingMode === 'all' 
                       ? 'bg-figma-green text-white' 
-                      : 'border-2 border-figma-gray text-figma-gray hover:border-figma-green hover:text-figma-green'
+                      : 'border-2 border-figma-gray text-figma-gray'
                   }`}
                 >
                   Ring All
@@ -184,13 +184,13 @@ export default function SettingsPage() {
                       <span className="text-sm text-figma-dark">Brian Scruggs</span>
                     </div>
                     <div className="col-span-4">
-                      <button className="text-sm text-figma-blue hover:underline">brian@zyratalk.com</button>
+                      <button className="text-sm text-figma-blue ">brian@zyratalk.com</button>
                     </div>
                     <div className="col-span-1">
                       <span className="text-sm text-figma-dark">30</span>
                     </div>
                     <div className="col-span-1">
-                      <button className="w-6 h-6 bg-figma-redLight rounded-full flex items-center justify-center hover:bg-figma-redLight/80">
+                      <button className="w-6 h-6 bg-figma-redLight rounded-full flex items-center justify-center ">
                         <XMarkIcon className="h-3 w-3 text-figma-red" />
                       </button>
                     </div>
@@ -216,7 +216,7 @@ export default function SettingsPage() {
                   setEditingRow(newRow)
                   setShowEditModal(true)
                 }}
-                className="mt-4 w-8 h-8 bg-figma-greenLight rounded-full flex items-center justify-center hover:bg-figma-greenLight/80 cursor-pointer transition-all"
+                className="mt-4 w-8 h-8 bg-figma-greenLight rounded-full flex items-center justify-center  cursor-pointer transition-all"
               >
                 <PlusIcon className="h-4 w-4 text-figma-green" />
               </button>
@@ -335,10 +335,10 @@ export default function SettingsPage() {
                     className="w-4 h-4 text-figma-blue border-gray-300 rounded focus:ring-figma-blue" 
                   />
                   <input type="text" placeholder="first_name" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <TrashIcon className="h-3 w-3 text-figma-gray" />
                   </button>
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <ArrowUpTrayIcon className="h-3 w-3 text-figma-gray" />
                   </button>
                 </div>
@@ -352,10 +352,10 @@ export default function SettingsPage() {
                     className="w-4 h-4 text-figma-blue border-gray-300 rounded focus:ring-figma-blue" 
                   />
                   <input type="text" placeholder="last_name" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <TrashIcon className="h-3 w-3 text-figma-gray" />
                   </button>
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <ArrowUpTrayIcon className="h-3 w-3 text-figma-gray" />
                   </button>
                 </div>
@@ -369,10 +369,10 @@ export default function SettingsPage() {
                     className="w-4 h-4 text-figma-blue border-gray-300 rounded focus:ring-figma-blue" 
                   />
                   <input type="text" placeholder="phone_number" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <TrashIcon className="h-3 w-3 text-figma-gray" />
                   </button>
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <ArrowUpTrayIcon className="h-3 w-3 text-figma-gray" />
                   </button>
                 </div>
@@ -386,10 +386,10 @@ export default function SettingsPage() {
                     className="w-4 h-4 text-figma-blue border-gray-300 rounded focus:ring-figma-blue" 
                   />
                   <input type="text" placeholder="is_homeowner (yes, no)" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <TrashIcon className="h-3 w-3 text-figma-gray" />
                   </button>
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <CogIcon className="h-3 w-3 text-figma-gray" />
                   </button>
                 </div>
@@ -403,10 +403,10 @@ export default function SettingsPage() {
                     className="w-4 h-4 text-figma-blue border-gray-300 rounded focus:ring-figma-blue" 
                   />
                   <input type="text" placeholder="is_emergency (yes, no)" className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <TrashIcon className="h-3 w-3 text-figma-gray" />
                   </button>
-                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80">
+                  <button className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center ">
                     <CogIcon className="h-3 w-3 text-figma-gray" />
                   </button>
                 </div>
@@ -435,7 +435,7 @@ export default function SettingsPage() {
                     enabled: false
                   })
                 }}
-                className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center hover:bg-figma-grayLight/80 cursor-pointer transition-all"
+                className="w-6 h-6 bg-figma-grayLight rounded-full flex items-center justify-center  cursor-pointer transition-all"
               >
                 <XMarkIcon className="h-4 w-4 text-figma-gray" />
               </button>
@@ -497,7 +497,7 @@ export default function SettingsPage() {
                     enabled: false
                   })
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 cursor-pointer transition-all"
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg  cursor-pointer transition-all"
               >
                 Cancel
               </button>
@@ -523,7 +523,7 @@ export default function SettingsPage() {
                   setShowEditModal(false)
                   setEditingRow(null)
                 }}
-                className="flex-1 px-4 py-2 bg-figma-blue text-white rounded-lg hover:bg-figma-blue/90 cursor-pointer transition-all"
+                className="flex-1 px-4 py-2 bg-figma-blue text-white rounded-lg  cursor-pointer transition-all"
               >
                 Save Changes
               </button>

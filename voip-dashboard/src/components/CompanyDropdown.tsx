@@ -54,50 +54,42 @@ export function CompanyDropdown({ companies, selectedCompany, onCompanyChange }:
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="dropdown-content z-50 w-80 bg-white rounded-box shadow-xl border border-gray-200">
-          {/* Header */}
-          <div className="px-4 py-3 border-b border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-900">Act!</h3>
+        <div className="dropdown-content z-50 w-80 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden" style={{ 
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+        }}>
+          {/* Header Section - User Name */}
+          <div className="px-6 py-4">
+            <h3 className="text-purple-600 text-2xl font-bold">Nirbhay Dev</h3>
+          </div>
+          
+          {/* My Profile Section */}
+          <div className="px-6 py-4">
+            <button
+              onClick={() => handleCompanySelect(selectedCompany)}
+              className="w-full flex items-center gap-4 transition-colors"
+            >
+              {/* Profile Icon */}
+              <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                <UserCircleIcon className="h-4 w-4 text-white" />
+              </div>
+              
+              {/* Profile Info */}
+              <div className="flex-1 text-left">
+                <div className="text-gray-900 font-medium">My Profile</div>
+                <div className="text-gray-500 text-sm">Account settings and more</div>
+              </div>
+
+              {/* Right Arrow */}
+              <ChevronDownIcon className="h-4 w-4 text-gray-400 rotate-[-90deg]" />
+            </button>
           </div>
 
-          {/* Company List */}
-          <div className="py-2">
-            {companies.map((company) => (
-              <button
-                key={company.id}
-                onClick={() => handleCompanySelect(company)}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-100 transition-colors ${
-                  selectedCompany.id === company.id ? 'bg-blue-50' : ''
-                }`}
-              >
-                {/* Company Icon */}
-                <div className="avatar placeholder">
-                  <div className="bg-green-500 text-white rounded-lg w-8">
-                    <UserCircleIcon className="h-5 w-5" />
-                  </div>
-                </div>
-                
-                {/* Company Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-900 truncate">
-                    {company.name}
-                  </div>
-                  {company.subtitle && (
-                    <div className="text-xs text-gray-500 truncate">
-                      {company.subtitle}
-                    </div>
-                  )}
-                </div>
+          {/* Divider */}
+          <div className="border-t border-gray-200"></div>
 
-                {/* Chevron */}
-                <ChevronDownIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
-              </button>
-            ))}
-          </div>
-
-          {/* Footer Actions */}
-          <div className="px-4 py-3 border-t border-gray-200">
-            <button className="btn btn-primary w-full">
+          {/* Sign Out Button */}
+          <div className="px-6 py-4">
+            <button className="w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-yellow-400 text-white font-medium rounded-lg transition-all duration-200">
               Sign Out
             </button>
           </div>

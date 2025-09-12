@@ -377,112 +377,184 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                     </button>
                     
                     {showDateDropdown && (
-                      <div className="absolute top-full left-0 w-full mt-1 z-50">
-                        <ul className="menu bg-white rounded-box w-full p-2 shadow-lg border-2" style={{ borderColor: '#dbe4f0' }}>
-                        <li>
-                          <button
-                            onClick={(e) => {
-                              try {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                setDateFilter('all')
-                                setShowDateDropdown(false)
-                              } catch (error) {
-                                console.error('Error selecting date filter:', error)
-                              }
-                            }}
-                            className={`${dateFilter === 'all' ? 'active' : ''}`}
-                          >
-                            All Time
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={(e) => {
-                              try {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                setDateFilter('today')
-                                setShowDateDropdown(false)
-                              } catch (error) {
-                                console.error('Error selecting date filter:', error)
-                              }
-                            }}
-                            className={`${dateFilter === 'today' ? 'active' : ''}`}
-                          >
-                            Today
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={(e) => {
-                              try {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                setDateFilter('thisWeek')
-                                setShowDateDropdown(false)
-                              } catch (error) {
-                                console.error('Error selecting date filter:', error)
-                              }
-                            }}
-                            className={`${dateFilter === 'thisWeek' ? 'active' : ''}`}
-                          >
-                            This Week
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={(e) => {
-                              try {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                setDateFilter('thisMonth')
-                                setShowDateDropdown(false)
-                              } catch (error) {
-                                console.error('Error selecting date filter:', error)
-                              }
-                            }}
-                            className={`${dateFilter === 'thisMonth' ? 'active' : ''}`}
-                          >
-                            This Month
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={(e) => {
-                              try {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                setDateFilter('thisYear')
-                                setShowDateDropdown(false)
-                              } catch (error) {
-                                console.error('Error selecting date filter:', error)
-                              }
-                            }}
-                            className={`${dateFilter === 'thisYear' ? 'active' : ''}`}
-                          >
-                            This Year
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={(e) => {
-                              try {
-                                e.preventDefault()
-                                e.stopPropagation()
-                                setDateFilter('dateRange')
-                                setShowDateRangePicker(true)
-                                setShowDateDropdown(false)
-                              } catch (error) {
-                                console.error('Error selecting date filter:', error)
-                              }
-                            }}
-                            className={`${dateFilter === 'dateRange' ? 'active' : ''}`}
-                          >
-                            Date Range
-                          </button>
-                        </li>
-                        </ul>
+                      <div className="absolute top-full left-0 w-full mt-2 z-50">
+                        <div className="bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden" style={{ 
+                          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                        }}>
+                          {/* Header Section */}
+                          <div className="px-6 py-4 bg-gradient-to-r from-purple-600 to-purple-700">
+                            <h3 className="text-white text-xl font-bold">Date Filter</h3>
+                          </div>
+                          
+                          {/* Menu Items */}
+                          <div className="py-2">
+                            <button
+                              onClick={(e) => {
+                                try {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setDateFilter('all')
+                                  setShowDateDropdown(false)
+                                } catch (error) {
+                                  console.error('Error selecting date filter:', error)
+                                }
+                              }}
+                              className={`w-full px-6 py-4 flex items-center gap-4 transition-colors ${
+                                dateFilter === 'all' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                              }`}
+                            >
+                              <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                                <CalendarIcon className="h-4 w-4 text-white" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-gray-900 font-medium">All Time</div>
+                                <div className="text-gray-500 text-sm">Show all records</div>
+                              </div>
+                              {dateFilter === 'all' && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </button>
+                            
+                            <button
+                              onClick={(e) => {
+                                try {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setDateFilter('today')
+                                  setShowDateDropdown(false)
+                                } catch (error) {
+                                  console.error('Error selecting date filter:', error)
+                                }
+                              }}
+                              className={`w-full px-6 py-4 flex items-center gap-4 transition-colors ${
+                                dateFilter === 'today' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                              }`}
+                            >
+                              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                                <CalendarIcon className="h-4 w-4 text-white" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-gray-900 font-medium">Today</div>
+                                <div className="text-gray-500 text-sm">Today's records only</div>
+                              </div>
+                              {dateFilter === 'today' && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </button>
+                            
+                            <button
+                              onClick={(e) => {
+                                try {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setDateFilter('thisWeek')
+                                  setShowDateDropdown(false)
+                                } catch (error) {
+                                  console.error('Error selecting date filter:', error)
+                                }
+                              }}
+                              className={`w-full px-6 py-4 flex items-center gap-4 transition-colors ${
+                                dateFilter === 'thisWeek' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                              }`}
+                            >
+                              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                                <CalendarIcon className="h-4 w-4 text-white" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-gray-900 font-medium">This Week</div>
+                                <div className="text-gray-500 text-sm">This week's records</div>
+                              </div>
+                              {dateFilter === 'thisWeek' && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </button>
+                            
+                            <button
+                              onClick={(e) => {
+                                try {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setDateFilter('thisMonth')
+                                  setShowDateDropdown(false)
+                                } catch (error) {
+                                  console.error('Error selecting date filter:', error)
+                                }
+                              }}
+                              className={`w-full px-6 py-4 flex items-center gap-4 transition-colors ${
+                                dateFilter === 'thisMonth' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                              }`}
+                            >
+                              <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                                <CalendarIcon className="h-4 w-4 text-white" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-gray-900 font-medium">This Month</div>
+                                <div className="text-gray-500 text-sm">This month's records</div>
+                              </div>
+                              {dateFilter === 'thisMonth' && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </button>
+                            
+                            <button
+                              onClick={(e) => {
+                                try {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setDateFilter('thisYear')
+                                  setShowDateDropdown(false)
+                                } catch (error) {
+                                  console.error('Error selecting date filter:', error)
+                                }
+                              }}
+                              className={`w-full px-6 py-4 flex items-center gap-4 transition-colors ${
+                                dateFilter === 'thisYear' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                              }`}
+                            >
+                              <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                                <CalendarIcon className="h-4 w-4 text-white" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-gray-900 font-medium">This Year</div>
+                                <div className="text-gray-500 text-sm">This year's records</div>
+                              </div>
+                              {dateFilter === 'thisYear' && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </button>
+                            
+                            <div className="border-t border-gray-200 my-2"></div>
+                            
+                            <button
+                              onClick={(e) => {
+                                try {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setDateFilter('dateRange')
+                                  setShowDateRangePicker(true)
+                                  setShowDateDropdown(false)
+                                } catch (error) {
+                                  console.error('Error selecting date filter:', error)
+                                }
+                              }}
+                              className={`w-full px-6 py-4 flex items-center gap-4 transition-colors ${
+                                dateFilter === 'dateRange' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+                              }`}
+                            >
+                              <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
+                                <CalendarIcon className="h-4 w-4 text-white" />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <div className="text-gray-900 font-medium">Custom Range</div>
+                                <div className="text-gray-500 text-sm">Select specific dates</div>
+                              </div>
+                              <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+                              {dateFilter === 'dateRange' && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     )}
                     
@@ -495,7 +567,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                               <h3 className="text-sm font-medium text-figma-dark">Select Date Range</h3>
                               <button
                                 onClick={() => setShowDateRangePicker(false)}
-                                className="text-figma-gray hover:text-figma-dark"
+                                className="text-figma-gray"
                               >
                                 <XMarkIcon className="h-4 w-4" />
                               </button>
@@ -547,7 +619,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                                   setDateFilter('all')
                                   setShowDateRangePicker(false)
                                 }}
-                                className="px-3 py-1 text-xs text-figma-gray hover:text-figma-dark font-medium"
+                                className="px-3 py-1 text-xs text-figma-gray font-medium"
                               >
                                 Clear
                               </button>
@@ -558,7 +630,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                                   }
                                 }}
                                 disabled={!dateRange.start || !dateRange.end}
-                                className="px-3 py-1 text-xs bg-figma-blue text-figma-white rounded font-medium hover:bg-figma-blue/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1 text-xs bg-figma-blue text-figma-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 Apply
                               </button>
@@ -762,7 +834,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                               setCurrentPage(1)
                               setShowItemsPerPageDropdown(false)
                             }}
-                            className={`w-full text-left px-3 py-2 text-sm rounded hover:bg-gray-100 transition-colors ${
+                            className={`w-full text-left px-3 py-2 text-sm rounded transition-colors ${
                               (size === 'All' && itemsPerPage === filteredRows.length) || 
                               (size !== 'All' && itemsPerPage === size) 
                                 ? 'bg-blue-100 text-blue-600 font-medium' 
@@ -792,7 +864,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   className={`px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                     currentPage === 1
                       ? 'bg-gray-100 text-figma-gray border-figma-gray cursor-not-allowed'
-                      : 'bg-white text-figma-dark border-figma-gray hover:bg-gray-50'
+                      : 'bg-white text-figma-dark border-figma-gray'
                   }`}
                   style={{ borderColor: '#dbe4f0' }}
                 >
@@ -804,7 +876,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   className={`px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                     currentPage === 1
                       ? 'bg-gray-100 text-figma-gray border-figma-gray cursor-not-allowed'
-                      : 'bg-white text-figma-dark border-figma-gray hover:bg-gray-50'
+                      : 'bg-white text-figma-dark border-figma-gray'
                   }`}
                   style={{ borderColor: '#dbe4f0' }}
                 >
@@ -831,7 +903,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                         className={`px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all duration-200 ${
                           currentPage === pageNum 
                             ? 'bg-gradient-to-r from-primary-500 to-success-500 text-figma-white shadow-lg border-transparent'
-                            : 'bg-white text-figma-dark border-figma-gray hover:bg-gray-50'
+                            : 'bg-white text-figma-dark border-figma-gray'
                         }`}
                         style={{ 
                           borderColor: currentPage === pageNum ? 'transparent' : '#dbe4f0'
@@ -849,7 +921,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   className={`px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                     currentPage === totalPages
                       ? 'bg-gray-100 text-figma-gray border-figma-gray cursor-not-allowed'
-                      : 'bg-white text-figma-dark border-figma-gray hover:bg-gray-50'
+                      : 'bg-white text-figma-dark border-figma-gray'
                   }`}
                   style={{ borderColor: '#dbe4f0' }}
                 >
@@ -861,7 +933,7 @@ export function CallCenter({ stats, query, setQuery, rows }: Props) {
                   className={`px-3 py-2 text-sm font-medium rounded-lg border-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                     currentPage === totalPages
                       ? 'bg-gray-100 text-figma-gray border-figma-gray cursor-not-allowed'
-                      : 'bg-white text-figma-dark border-figma-gray hover:bg-gray-50'
+                      : 'bg-white text-figma-dark border-figma-gray'
                   }`}
                   style={{ borderColor: '#dbe4f0' }}
                 >

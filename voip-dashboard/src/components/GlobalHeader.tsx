@@ -50,7 +50,7 @@ export function GlobalHeader({ onMenuClick, title = "VoIP Dashboard", showCompan
         {/* Menu Button */}
         <button
           onClick={onMenuClick}
-          className="btn btn-ghost btn-square"
+          className="btn btn-ghost btn-square hover:bg-transparent"
           aria-label="Open menu"
         >
           <Bars3Icon className="h-6 w-6" />

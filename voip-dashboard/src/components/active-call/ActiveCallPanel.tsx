@@ -57,7 +57,7 @@ export function ActiveCallPanel({ onClose }: Props) {
           </div>
         </div>
         <button 
-          className="p-2 text-figma-gray hover:text-figma-dark hover:bg-figma-grayLight rounded-lg transition-colors"
+          className="p-2 text-figma-gray   rounded-lg transition-colors"
           onClick={onClose} 
           aria-label="Close"
         >
@@ -128,7 +128,7 @@ export function ActiveCallPanel({ onClose }: Props) {
           </button>
         </div>
         <button 
-          className="w-14 h-14 bg-figma-red hover:bg-red-600 text-figma-white rounded-2xl flex items-center justify-center shadow-medium hover:shadow-strong transition-all duration-200"
+          className="w-14 h-14 bg-figma-red  text-figma-white rounded-2xl flex items-center justify-center shadow-medium  transition-all duration-200"
           aria-label="End call"
         >
           <PhoneIcon className="h-6 w-6" />
@@ -171,7 +171,7 @@ function Control({
       className={`flex flex-col items-center gap-3 p-4 rounded-xl border transition-all duration-200 ${
         active 
           ? activeClasses[activeColor]
-          : 'border-gray-200 hover:bg-figma-grayLight text-figma-gray'
+          : 'border-gray-200  text-figma-gray'
       }`}
     >
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${

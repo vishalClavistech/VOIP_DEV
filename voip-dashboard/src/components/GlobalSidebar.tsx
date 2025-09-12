@@ -53,7 +53,7 @@ export function GlobalSidebar({ isOpen, onClose }: GlobalSidebarProps) {
           </div>
           <button
             onClick={onClose}
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm hover:bg-transparent"
             aria-label="Close sidebar"
           >
             <XMarkIcon className="h-5 w-5" />
@@ -69,7 +69,7 @@ export function GlobalSidebar({ isOpen, onClose }: GlobalSidebarProps) {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-3 hover:bg-transparent"
                     onClick={() => {
                       // Close sidebar when navigating
                       onClose()

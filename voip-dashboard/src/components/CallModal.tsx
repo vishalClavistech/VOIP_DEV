@@ -103,7 +103,7 @@ export function CallModal({ isOpen, onClose, callRecord, onMakeCall }: Props) {
         {/* Header */}
         <div className="relative p-6 text-center">
           <button 
-            className="absolute top-4 right-4 p-2 text-figma-gray hover:text-figma-dark hover:bg-figma-grayLight rounded-lg transition-colors"
+            className="absolute top-4 right-4 p-2 text-figma-gray   rounded-lg transition-colors"
             onClick={onClose} 
             aria-label="Close"
           >
@@ -128,7 +128,7 @@ export function CallModal({ isOpen, onClose, callRecord, onMakeCall }: Props) {
             <h3 className="text-2xl font-bold text-figma-dark">
               {callRecord?.contactName || callRecord?.fromNumber || 'Unknown Caller'}
             </h3>
-            <button className="p-1 text-figma-gray hover:text-figma-dark">
+            <button className="p-1 text-figma-gray ">
               <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
               </svg>
@@ -204,7 +204,7 @@ export function CallModal({ isOpen, onClose, callRecord, onMakeCall }: Props) {
                   <button
                     key={num}
                     onClick={() => handleDialPadInput(num)}
-                    className="w-full h-12 bg-figma-white border border-gray-200 rounded-lg hover:bg-figma-grayLight transition-colors font-semibold text-figma-dark"
+                    className="w-full h-12 bg-figma-white border border-gray-200 rounded-lg  transition-colors font-semibold text-figma-dark"
                   >
                     {num}
                   </button>
@@ -262,19 +262,19 @@ export function CallModal({ isOpen, onClose, callRecord, onMakeCall }: Props) {
           <div className="flex items-center justify-between">
             {/* Left Actions */}
             <div className="flex items-center gap-4">
-              <button className="flex flex-col items-center gap-1 text-figma-gray hover:text-figma-dark transition-colors">
+              <button className="flex flex-col items-center gap-1 text-figma-gray  transition-colors">
                 <div className="w-10 h-10 bg-figma-grayLight rounded-lg flex items-center justify-center">
                   <UserPlusIcon className="h-5 w-5" />
                 </div>
                 <span className="text-xs">Add</span>
               </button>
-              <button className="flex flex-col items-center gap-1 text-figma-gray hover:text-figma-dark transition-colors">
+              <button className="flex flex-col items-center gap-1 text-figma-gray  transition-colors">
                 <div className="w-10 h-10 bg-figma-grayLight rounded-lg flex items-center justify-center">
                   <ArrowUturnRightIcon className="h-5 w-5" />
                 </div>
                 <span className="text-xs">Transfer</span>
               </button>
-              <button className="flex flex-col items-center gap-1 text-figma-gray hover:text-figma-dark transition-colors">
+              <button className="flex flex-col items-center gap-1 text-figma-gray  transition-colors">
                 <div className="w-10 h-10 bg-figma-grayLight rounded-lg flex items-center justify-center">
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -286,7 +286,7 @@ export function CallModal({ isOpen, onClose, callRecord, onMakeCall }: Props) {
 
             {/* End Call Button */}
             <button 
-              className="w-16 h-16 bg-figma-red hover:bg-red-600 text-figma-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200"
+              className="w-16 h-16 bg-figma-red  text-figma-white rounded-full flex items-center justify-center shadow-lg  transition-all duration-200"
               onClick={handleEndCall}
               aria-label="End call"
             >
@@ -326,7 +326,7 @@ function Control({
       <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-colors ${
         active 
           ? activeClasses[activeColor]
-          : 'bg-figma-grayLight text-figma-gray hover:bg-gray-200'
+          : 'bg-figma-grayLight text-figma-gray '
       }`}>
         {icon}
       </div>
