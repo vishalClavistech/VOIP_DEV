@@ -51,13 +51,13 @@ export function Modal({
           <div className="flex gap-3 p-6 border-t border-gray-200">
             <button 
               onClick={onSave}
-              className="flex-1 bg-figma-green text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors"
+              className="flex-1 bg-figma-green text-sm text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-green/90 transition-colors"
             >
               {saveButtonText}
             </button>
             <button 
               onClick={onClose}
-              className="flex-1 bg-figma-gray text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-gray/90 transition-colors"
+              className="flex-1 bg-figma-gray text-sm text-figma-white py-3 px-4 rounded-lg font-medium hover:bg-figma-gray/90 transition-colors"
             >
               Close
             </button>
